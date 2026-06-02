@@ -1,0 +1,115 @@
+[
+  {
+    "id": "1780422909601-606210859",
+    "userId": "1780422869234-27635454",
+    "originalname": "Dhvani_resume.pdf",
+    "filename": "resume-Dhvani_resume-1780422888702-466864336.pdf",
+    "size": 68575,
+    "atsScore": 60,
+    "strengths": [
+      "Clear and concise objective statement clearly stating career goals and relevant technologies.",
+      "Essential technical skills for a MERN stack developer (React.js, Node.js, MongoDB) are explicitly listed.",
+      "Mentions a relevant project ('Speakora') showcasing application of core skills.",
+      "Holds a Bachelor's Degree in Computer Engineering, which is highly relevant.",
+      "Contact information and professional title are prominent and easy to find."
+    ],
+    "weaknesses": [
+      "Lacks professional work experience (internships, full-time roles), which is critical for ATS and recruiters.",
+      "The project section is too brief, missing crucial details like specific features, technologies used in depth, quantifiable results, and links to live demos/repositories.",
+      "Resume formatting is inconsistent and unstructured, with generic headings ('PROJECT', 'SKILLS', 'SOFT SKILLS') making it less professional and harder to scan.",
+      "Absence of quantifiable achievements or impact for academic work or the listed project.",
+      "Includes high school education details (H.S.C, S.S.C) which are generally not required for a graduate-level resume."
+    ],
+    "missingSkills": [
+      "Testing Frameworks (e.g., Jest, React Testing Library, Mocha, Chai)",
+      "API Design Principles (e.g., RESTful best practices)",
+      "Authentication/Authorization (e.g., JWT, OAuth)",
+      "Deployment & CI/CD Tools (e.g., Docker, GitHub Actions, Netlify, Vercel, Heroku)",
+      "Cloud Platforms (e.g., AWS, Azure, GCP)",
+      "State Management Libraries (e.g., Redux, Zustand for React)",
+      "UI Component Libraries/Frameworks (e.g., Material-UI, Tailwind CSS, Bootstrap)",
+      "Data Structures and Algorithms",
+      "Agile/Scrum Methodologies"
+    ],
+    "suggestions": [
+      "**Elaborate on Projects:** Expand the 'Speakora' project with bullet points detailing specific features, your contributions, challenges overcome, technologies used for each part, and quantifiable outcomes. Add more projects if possible, including links to GitHub repositories and live demos.",
+      "**Seek Experience:** Actively pursue internships, part-time roles, or freelance opportunities to gain professional experience and demonstrate practical application of skills.",
+      "**Improve Formatting and Structure:** Adopt a standard resume template with clear sections (e.g., 'Summary/Objective', 'Skills', 'Experience', 'Projects', 'Education'). Use strong action verbs at the start of bullet points.",
+      "**Enhance Skills Section:** Categorize technical skills (e.g., 'Frontend', 'Backend', 'Databases', 'Tools', 'Cloud') for better readability. Incorporate missing industry-standard skills and tools listed above.",
+      "**Remove Redundancy and Non-Essentials:** Remove the high school education details and the 'INTERESTS' section, as these do not add significant value for a professional resume and can be better utilized for more relevant information."
+    ],
+    "createdAt": "2026-06-02T17:55:09.601Z"
+  },
+  {
+    "id": "1780424368906-905898473",
+    "userId": "1780422407741-737820499",
+    "originalname": "valid_test.pdf",
+    "filename": "resume-valid_test-1780424354529-313380978.pdf",
+    "size": 13264,
+    "atsScore": 0,
+    "strengths": [
+      "N/A - No actual resume content provided for analysis."
+    ],
+    "weaknesses": [
+      "The provided text is 'Dummy PDF file', indicating that the actual resume content was not extracted or provided.",
+      "Without actual content, it's impossible to evaluate skills, experience, formatting, or keyword relevance.",
+      "The resume appears to be entirely empty or unreadable by an ATS."
+    ],
+    "missingSkills": [
+      "N/A - Cannot determine missing skills without any resume content."
+    ],
+    "suggestions": [
+      "Please provide the actual text content of the resume for a comprehensive ATS and recruiter analysis.",
+      "Ensure the resume is in a machine-readable format (e.g., plain text, DOCX, readable PDF) to allow proper parsing by an ATS.",
+      "Verify that the PDF conversion or text extraction process is working correctly to avoid submitting an empty or unreadable file."
+    ],
+    "createdAt": "2026-06-02T18:19:28.906Z"
+  },
+  {
+    "id": "1780424553334-556492089",
+    "userId": "1780422869234-27635454",
+    "originalname": "Dhvani_resume.pdf",
+    "filename": "resume-Dhvani_resume-1780424539257-425309791.pdf",
+    "size": 68575,
+    "atsScore": 45,
+    "strengths": [
+      "Clear career objective targeting Full Stack and Web Development with specific technologies (React, Node.js).",
+      "Relevant technical skills are explicitly listed, covering the MERN stack (MongoDB, Express.js, React.js, Node.js), HTML5, CSS3, JavaScript, MySQL, Git, and VS Code.",
+      "A relevant project ('Speakora – AI Language Learning Platform') is mentioned, demonstrating practical application of skills.",
+      "Soft skills like Communication, Leadership, Teamwork, and Problem-Solving are included, which are valuable for team environments."
+    ],
+    "weaknesses": [
+      "Severe lack of structural clarity and poor formatting based on the provided text, which would confuse an ATS (e.g., 'PROJECT SKILLS SOFT SKILLS' as a single line, jumbled sections).",
+      "Minimal detail on the listed project; it lacks specific contributions, technologies used within the project context, challenges overcome, or quantifiable impact/results.",
+      "No professional work experience or internships are listed, which is a significant gap for a developer role.",
+      "Missing critical information such as dates for education (start/end) and project completion, making it difficult to gauge currency or duration of involvement.",
+      "Absence of a link to a GitHub profile or personal portfolio, which is essential for developers to showcase their code and projects."
+    ],
+    "missingSkills": [
+      "Specific version control platforms (GitHub, GitLab)",
+      "Cloud platforms (AWS, Azure, GCP, Heroku, Netlify, Vercel)",
+      "Containerization (Docker)",
+      "CI/CD pipelines",
+      "Testing frameworks (Jest, React Testing Library, Cypress)",
+      "State management libraries (Redux Toolkit, Context API, Zustand)",
+      "Authentication/Authorization methods (JWT, OAuth, Passport.js)",
+      "Advanced database skills (PostgreSQL, Redis, Mongoose ORM)",
+      "Frontend build tools (Webpack, Babel, Vite)",
+      "Backend frameworks (NestJS, Next.js for full-stack applications)",
+      "API development tools (Postman)",
+      "Development methodologies (Agile, Scrum)",
+      "Data Structures and Algorithms (DSA)"
+    ],
+    "suggestions": [
+      "**Restructure and Reformat:** Organize the resume into clear, distinct sections (Contact, Summary/Objective, Skills, Projects, Education). Use consistent formatting, bullet points, and white space for readability.",
+      "**Elaborate on Projects:** For 'Speakora' and any other projects, include: your specific role, detailed technologies used (e.g., 'React hooks for state management,' 'Node.js with Express for RESTful APIs'), challenges faced and solutions, and quantifiable achievements (e.g., 'implemented real-time chat with WebSockets,' 'improved user engagement by X%'). Provide links to GitHub and live demos.",
+      "**Add Professional Experience/Internships:** If you have any internships, freelance work, or significant academic projects, dedicate a section to 'Experience' and describe your responsibilities and achievements.",
+      "**Include Dates:** Add start and end dates for your education and projects to provide a clear timeline.",
+      "**Create a GitHub Profile/Portfolio:** A robust GitHub profile with well-documented projects is crucial. Include this link prominently in your contact information.",
+      "**Expand and Categorize Skills:** Add missing industry-standard keywords (e.g., Redux, Docker, AWS, Jest). Categorize skills (e.g., 'Frontend Technologies,' 'Backend Technologies,' 'Databases,' 'Tools,' 'Cloud Platforms') for better readability and ATS parsing.",
+      "**Quantify Achievements:** Rephrase bullet points to highlight the impact and results of your work using numbers and metrics wherever possible (e.g., 'Optimized database queries, reducing load time by 20%').",
+      "**Tailor to Job Descriptions:** Customize the resume for each application by incorporating keywords and phrases directly from the job description to improve ATS match scores."
+    ],
+    "createdAt": "2026-06-02T18:22:33.334Z"
+  }
+]

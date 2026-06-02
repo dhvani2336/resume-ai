@@ -1,0 +1,71 @@
+[
+  {
+    "id": "1780424388046-548335213",
+    "userId": "1780422407741-737820499",
+    "resumeId": "1780424368906-905898473",
+    "originalname": "valid_test.pdf",
+    "jobDescription": "We are looking for a Senior MERN Full Stack Developer with expert Node.js and React.js experience to build web applications.",
+    "matchScore": 0,
+    "matchingSkills": [],
+    "missingKeywords": [
+      "Senior MERN Full Stack Developer",
+      "Node.js",
+      "React.js",
+      "MERN",
+      "Full Stack Developer",
+      "MongoDB",
+      "Express.js",
+      "web applications",
+      "expert Node.js experience",
+      "expert React.js experience"
+    ],
+    "strengths": [],
+    "improvementSuggestions": [
+      "Populate the resume with actual content detailing your professional experience, skills, and projects.",
+      "Clearly list your proficiency in Node.js and React.js, specifying an 'expert' level if applicable, with examples of projects built using these technologies.",
+      "Highlight your experience with the full MERN stack (MongoDB, Express.js, React.js, Node.js) and other full-stack development work.",
+      "Include specific examples of web applications you have built, detailing your role and the technologies used.",
+      "Ensure your resume includes keywords like 'Senior MERN Full Stack Developer' or similar titles if your experience aligns, and detail your senior-level responsibilities and achievements."
+    ],
+    "createdAt": "2026-06-02T18:19:48.046Z"
+  },
+  {
+    "id": "1780424590816-93550581",
+    "userId": "1780422869234-27635454",
+    "resumeId": "1780424553334-556492089",
+    "originalname": "Dhvani_resume.pdf",
+    "jobDescription": "web devlopment  full stack devlopment",
+    "matchScore": 98,
+    "matchingSkills": [
+      "Web Development",
+      "Full Stack Development",
+      "React.js",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "MySQL",
+      "Git",
+      "Problem-Solving"
+    ],
+    "missingKeywords": [],
+    "strengths": [
+      "The candidate's objective directly aligns with 'Full Stack and Web Development', explicitly mentioning key technologies like React and Node.js.",
+      "Demonstrates practical experience with a MERN-based web application (Speakora), showcasing capabilities in building responsive UIs and backend APIs with database integration (MongoDB).",
+      "Possesses a strong foundation in core web technologies including HTML5, CSS3, JavaScript, and popular frameworks/libraries like React.js, Node.js, and Express.js.",
+      "Lists relevant database experience with both NoSQL (MongoDB) and SQL (MySQL), which is valuable for full-stack roles.",
+      "Includes essential development tools like Git and VS Code, indicating readiness for collaborative software development environments.",
+      "Highlights soft skills such as 'Problem-Solving', 'Teamwork', and 'Communication', which are crucial for successful project execution in web development."
+    ],
+    "improvementSuggestions": [
+      "Quantify achievements in project descriptions where possible (e.g., 'Developed MERN-based web app that processed X users/data' or 'Improved performance by Y%').",
+      "Elaborate on specific responsibilities and contributions within the 'Speakora' project to provide more context on the scale and complexity of work performed.",
+      "Consider replacing the 'To apply my knowledge...' objective with a concise 'Professional Summary' that highlights key qualifications and accomplishments relevant to full-stack development.",
+      "While 'Basic OOPs' is mentioned, if relevant to the role, consider specifying the programming language(s) where these principles were applied and perhaps an example of their use.",
+      "For full-stack roles, mentioning experience with deployment platforms (e.g., Vercel, Heroku, Netlify, AWS, Azure, Google Cloud) or CI/CD pipelines would be a valuable addition."
+    ],
+    "createdAt": "2026-06-02T18:23:10.816Z"
+  }
+]
