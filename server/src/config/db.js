@@ -12,8 +12,13 @@ export const connectDb = async () => {
   try {
     client = new MongoClient(uri);
     await client.connect();
-    db = client.db();
-    console.log('[Database] Connected successfully to MongoDB Atlas.');
+    
+    // Parse database name from URI if present, otherwise default to 'resumeai'
+    const hasDbInUri = uri.split('?')[0].split('/').slice(3).join('/') !== '';
+    const dbName = hasDbInUri ? undefined : (process.env.MONGODB_DB_NAME || 'resumeai');
+    db = client.db(dbName);
+    
+    console.log(`[Database] Connected successfully to MongoDB Atlas (DB: ${dbName || 'specified in URI'}).`);
     
     // Create database indexes
     await createIndexes(db);

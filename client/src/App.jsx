@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import DashboardLayout from "./components/DashboardLayout";
 import { API_BASE } from "./utils/api.js";
 import "./App.css";
 
@@ -41,12 +42,10 @@ const PageLoader = () => (
   </div>
 );
 
-// Layout Wrapper to inject Navbar and Footer based on Route
 function MainLayout({ children, onLogout }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const isDashboard = location.pathname === "/dashboard";
 
   // Redirect legacy hash-based URLs (like #/login) to clean paths (like /login)
   useEffect(() => {
@@ -128,26 +127,54 @@ function MainLayout({ children, onLogout }) {
     metaDescription.content = description;
   }, [location.pathname]);
 
+  const dashboardRoutes = [
+    "/dashboard",
+    "/job-match",
+    "/rewrite",
+    "/export",
+    "/analytics",
+    "/interview-prep",
+    "/profile",
+    "/settings",
+    "/team-workspace",
+    "/versions",
+    "/career-coach",
+    "/cover-letter",
+    "/linkedin-optimizer",
+    "/portfolio-generator",
+    "/admin"
+  ];
+
+  const isDashboardRoute = dashboardRoutes.some(route => 
+    location.pathname === route || location.pathname.startsWith(route + "/")
+  );
+
+  if (isDashboardRoute) {
+    return (
+      <DashboardLayout user={user} onLogout={onLogout}>
+        {children}
+      </DashboardLayout>
+    );
+  }
+
   return (
     <div className="app-wrapper">
-      {!isDashboard && <Navbar user={user} onLogout={onLogout} />}
+      <Navbar user={user} onLogout={onLogout} />
       <main>{children}</main>
-      {!isDashboard && (
-        <footer className="footer">
-          <div className="container footer-container">
-            <div className="footer-brand">
-              <div className="footer-logo-dot"></div>
-              <span>ResumeAI</span>
-            </div>
-            <p>&copy; {new Date().getFullYear()} ResumeAI. All rights reserved.</p>
-            <div className="footer-links">
-              <a href="#" className="footer-link">Privacy</a>
-              <a href="#" className="footer-link">Terms</a>
-              <a href="#" className="footer-link">Support</a>
-            </div>
+      <footer className="footer">
+        <div className="container footer-container">
+          <div className="footer-brand">
+            <div className="footer-logo-dot"></div>
+            <span>ResumeAI</span>
           </div>
-        </footer>
-      )}
+          <p>&copy; {new Date().getFullYear()} ResumeAI. All rights reserved.</p>
+          <div className="footer-links">
+            <a href="#" className="footer-link">Privacy</a>
+            <a href="#" className="footer-link">Terms</a>
+            <a href="#" className="footer-link">Support</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -962,6 +989,7 @@ function App() {
             
             {/* Enterprise Routes */}
             <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Profile />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/verify-email" element={<EmailVerification />} />

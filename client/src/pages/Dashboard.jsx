@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE } from "../utils/api.js";
+import StatCard from "../components/StatCard";
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -168,12 +169,6 @@ function Dashboard() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
-
   // Uploader Handlers
   const handleDrag = (e) => {
     e.preventDefault();
@@ -302,21 +297,54 @@ function Dashboard() {
     setUploadedFilename("");
   };
 
+  // Filter and sort analyses history list
+  const filteredAnalyses = analyses
+    .filter((item) => 
+      item.originalname.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === "date-desc") {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+      if (sortBy === "date-asc") {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      }
+      if (sortBy === "score-desc") {
+        return b.atsScore - a.atsScore;
+      }
+      if (sortBy === "score-asc") {
+        return a.atsScore - b.atsScore;
+      }
+      return 0;
+    });
+
+  // Calculate dynamic stats metrics
+  const totalScans = analyses.length;
+  const averageScore = totalScans > 0 
+    ? Math.round(analyses.reduce((acc, curr) => acc + curr.atsScore, 0) / totalScans) 
+    : 0;
+  const highestScore = totalScans > 0 
+    ? Math.max(...analyses.map(a => a.atsScore)) 
+    : 0;
+
   if (loading) {
     return (
-      <div className="dashboard-wrapper">
-        <header className="dashboard-header" style={{ borderBottom: "1px solid var(--color-border)" }}>
-          <div className="db-brand">
-            <div className="db-logo-dot"></div>
-            <span>ResumeAI Dashboard</span>
-          </div>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <div className="skeleton skeleton-text" style={{ width: "8rem", height: "1rem" }}></div>
-            <div className="skeleton skeleton-btn" style={{ width: "4.5rem", height: "1.875rem", borderRadius: "0.375rem" }}></div>
-          </div>
-        </header>
+      <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: "1.5rem", width: "100%" }}>
+        {/* Welcome Section Skeleton */}
+        <div>
+          <div className="skeleton skeleton-text" style={{ width: "12rem", height: "1.5rem", marginBottom: "0.5rem" }}></div>
+          <div className="skeleton skeleton-text" style={{ width: "18rem", height: "1rem" }}></div>
+        </div>
 
-        <div className="dashboard-grid container" style={{ marginTop: "2rem" }}>
+        {/* Stat Cards Skeleton Row */}
+        <div className="stat-cards-row">
+          <div className="skeleton skeleton-block" style={{ height: "6.5rem", borderRadius: "16px" }}></div>
+          <div className="skeleton skeleton-block" style={{ height: "6.5rem", borderRadius: "16px" }}></div>
+          <div className="skeleton skeleton-block" style={{ height: "6.5rem", borderRadius: "16px" }}></div>
+        </div>
+
+        {/* Dashboard Grid Skeleton */}
+        <div className="dashboard-grid" style={{ paddingTop: 0 }}>
           <div className="dashboard-left" style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             <div className="glass-card" style={{ padding: "1.5rem" }}>
               <div className="skeleton skeleton-text" style={{ width: "6rem", height: "1rem", marginBottom: "1rem" }}></div>
@@ -365,66 +393,69 @@ function Dashboard() {
     );
   }
 
-  // Filter and sort analyses history list
-  const filteredAnalyses = analyses
-    .filter((item) => 
-      item.originalname.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (sortBy === "date-desc") {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      }
-      if (sortBy === "date-asc") {
-        return new Date(a.createdAt) - new Date(b.createdAt);
-      }
-      if (sortBy === "score-desc") {
-        return b.atsScore - a.atsScore;
-      }
-      if (sortBy === "score-asc") {
-        return a.atsScore - b.atsScore;
-      }
-      return 0;
-    });
-
   return (
-    <div className="dashboard-wrapper animate-fade-in">
-      {/* Dashboard Top Header Bar */}
-      <header className="dashboard-header">
-        <div className="db-brand">
-          <div className="db-logo-dot"></div>
-          <span>ResumeAI Dashboard</span>
+    <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: "1.5rem", width: "100%" }}>
+      
+      {/* Welcome Title area */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <h1 style={{ fontSize: "1.625rem", fontWeight: 800, letterSpacing: "-0.02em", color: "#ffffff" }}>
+            Welcome back, {user?.name || "User"}
+          </h1>
+          <p style={{ fontSize: "0.875rem", color: "var(--color-text-secondary)" }}>
+            Review, evaluate, and rewrite your resumes to boost your interview callbacks.
+          </p>
         </div>
-        <div className="db-user-actions">
-          <span className="db-welcome-text">Welcome, <b>{user?.name}</b></span>
-          <button onClick={() => navigate("/job-match")} className="btn btn-primary btn-sm" style={{ marginRight: "0.5rem", fontSize: "0.75rem", padding: "0.375rem 0.75rem", backgroundColor: "var(--color-purple)", borderColor: "var(--color-purple)" }}>
-            Job Match Scan
-          </button>
-          <button onClick={() => navigate("/rewrite")} className="btn btn-primary btn-sm" style={{ marginRight: "0.5rem", fontSize: "0.75rem", padding: "0.375rem 0.75rem", backgroundColor: "var(--color-cyan)", borderColor: "var(--color-cyan)", color: "rgba(15, 23, 42, 1)", fontWeight: 700 }}>
-            Rewrite with AI
-          </button>
-          <button onClick={() => navigate("/export")} className="btn btn-primary btn-sm" style={{ marginRight: "0.5rem", fontSize: "0.75rem", padding: "0.375rem 0.75rem", backgroundColor: "var(--color-emerald)", borderColor: "var(--color-emerald)", color: "rgba(15, 23, 42, 1)", fontWeight: 700 }}>
-            Export Resume
-          </button>
-          <button onClick={() => navigate("/analytics")} className="btn btn-primary btn-sm" style={{ marginRight: "0.5rem", fontSize: "0.75rem", padding: "0.375rem 0.75rem", backgroundColor: "var(--color-indigo)", borderColor: "var(--color-indigo)", color: "var(--color-text-primary)", fontWeight: 700 }}>
-            System Analytics
-          </button>
-          <button onClick={() => navigate("/interview-prep")} className="btn btn-primary btn-sm" style={{ marginRight: "0.5rem", fontSize: "0.75rem", padding: "0.375rem 0.75rem", backgroundColor: "var(--color-purple)", borderColor: "var(--color-purple)", color: "var(--color-text-primary)", fontWeight: 700 }}>
-            Interview Prep
-          </button>
-          <button onClick={handleLogout} className="btn btn-secondary btn-sm db-logout-btn">
-            Log Out
-          </button>
-        </div>
-      </header>
+      </div>
+
+      {/* Quick Statistics Cards Row */}
+      <div className="stat-cards-row">
+        <StatCard
+          title="Total Resumes Scanned"
+          value={totalScans}
+          description="Scanned & indexed"
+          icon={
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          }
+          trend={totalScans > 0 ? `+${totalScans}` : null}
+          trendType="info"
+        />
+        <StatCard
+          title="Average ATS Score"
+          value={`${averageScore}%`}
+          description="Score criteria check"
+          icon={
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
+            </svg>
+          }
+          trend={averageScore >= 70 ? "PASSED" : totalScans > 0 ? "WARNING" : null}
+          trendType={averageScore >= 70 ? "success" : "danger"}
+        />
+        <StatCard
+          title="Highest Score Match"
+          value={`${highestScore}%`}
+          description="Best draft result"
+          icon={
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+          }
+          trend={highestScore >= 80 ? "EXCELLENT" : highestScore > 0 ? "GOOD" : null}
+          trendType="success"
+        />
+      </div>
 
       {/* Main Grid Workspace */}
-      <div className="dashboard-grid container">
+      <div className="dashboard-grid" style={{ paddingTop: 0 }}>
         
         {/* Left Column: Actions and History List */}
         <div className="dashboard-left">
           
           {/* Section: Upload Resume */}
-          <div className="glass-card db-card">
+          <div className="glass-card db-card" style={{ borderRadius: "16px" }}>
             <h3 className="card-section-title">Scan New Resume</h3>
             
             <div
@@ -433,7 +464,7 @@ function Dashboard() {
               onDragOver={handleDrag}
               onDragLeave={handleDrag}
               onDrop={handleDrop}
-              style={{ padding: "1.75rem 1rem", borderRadius: "0.75rem" }}
+              style={{ padding: "1.75rem 1rem", borderRadius: "12px", borderStyle: "dashed" }}
             >
               <input
                 type="file"
@@ -451,8 +482,8 @@ function Dashboard() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
                   </div>
-                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700 }}>Drag & drop resume PDF</h4>
-                  <label htmlFor="db-file-upload-input" className="btn btn-secondary btn-sm" style={{ cursor: "pointer", padding: "0.375rem 0.75rem", fontSize: "0.6875rem" }}>
+                  <h4 style={{ fontSize: "0.875rem", fontWeight: 700 }}>Drag & drop resume PDF</h4>
+                  <label htmlFor="db-file-upload-input" className="btn btn-secondary btn-sm" style={{ cursor: "pointer", padding: "0.375rem 0.75rem", fontSize: "0.6875rem", borderRadius: "8px" }}>
                     Browse Files
                   </label>
                   {uploadError && (
@@ -466,7 +497,7 @@ function Dashboard() {
               {uploadState === "uploading" && (
                 <>
                   <div className="spinner"></div>
-                  <h4 style={{ fontSize: "0.875rem", fontWeight: 600 }}>Uploading {fileName}...</h4>
+                  <h4 style={{ fontSize: "0.8125rem", fontWeight: 600 }}>Uploading {fileName}...</h4>
                 </>
               )}
 
@@ -478,18 +509,18 @@ function Dashboard() {
                     </svg>
                   </div>
                   <h4 style={{ fontSize: "0.875rem", fontWeight: 700, color: "var(--color-cyan)" }}>Upload Ready</h4>
-                  <p style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)" }}>{fileName}</p>
+                  <p style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)", wordBreak: "break-all" }}>{fileName}</p>
                   
                   <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
                     <button 
                       className="btn btn-primary btn-sm" 
                       onClick={handleAnalyze} 
                       disabled={isAnalyzing}
-                      style={{ fontSize: "0.6875rem", padding: "0.375rem 0.75rem" }}
+                      style={{ fontSize: "0.6875rem", padding: "0.375rem 0.75rem", borderRadius: "6px" }}
                     >
                       {isAnalyzing ? "Analyzing..." : "Run AI Analysis"}
                     </button>
-                    <button onClick={resetUpload} className="btn btn-secondary btn-sm" style={{ fontSize: "0.6875rem", padding: "0.375rem 0.75rem" }}>
+                    <button onClick={resetUpload} className="btn btn-secondary btn-sm" style={{ fontSize: "0.6875rem", padding: "0.375rem 0.75rem", borderRadius: "6px" }}>
                       Cancel
                     </button>
                   </div>
@@ -499,7 +530,7 @@ function Dashboard() {
           </div>
 
           {/* Section: Scan History list */}
-          <div className="glass-card db-card" style={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+          <div className="glass-card db-card" style={{ flexGrow: 1, display: "flex", flexDirection: "column", borderRadius: "16px" }}>
             <div className="db-history-header-row" style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1rem" }}>
               <h3 className="card-section-title" style={{ margin: 0 }}>Scan History</h3>
               
@@ -515,7 +546,7 @@ function Dashboard() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="db-search-input"
-                    style={{ width: "100%", padding: "0.375rem 0.5rem 0.375rem 1.625rem", fontSize: "0.75rem", borderRadius: "0.375rem", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.4)", color: "var(--color-text-primary)", outline: "none" }}
+                    style={{ width: "100%", padding: "0.45rem 0.5rem 0.45rem 1.625rem", fontSize: "0.75rem", borderRadius: "8px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.4)", color: "var(--color-text-primary)", outline: "none" }}
                   />
                 </div>
                 
@@ -523,7 +554,7 @@ function Dashboard() {
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="db-sort-select"
-                  style={{ padding: "0.375rem 0.5rem", fontSize: "0.75rem", borderRadius: "0.375rem", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.4)", color: "var(--color-text-secondary)", outline: "none", cursor: "pointer" }}
+                  style={{ padding: "0.45rem 0.5rem", fontSize: "0.75rem", borderRadius: "8px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.4)", color: "var(--color-text-secondary)", outline: "none", cursor: "pointer" }}
                 >
                   <option value="date-desc">Newest Date</option>
                   <option value="date-asc">Oldest Date</option>
@@ -534,11 +565,11 @@ function Dashboard() {
             </div>
             
             {analyses.length === 0 ? (
-              <div className="empty-history-box" style={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "10rem" }}>
+              <div className="empty-history-box" style={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "10rem", borderRadius: "12px", borderStyle: "dashed" }}>
                 <p style={{ textAlign: "center", fontSize: "0.8125rem", color: "var(--color-text-muted)" }}>No scans logged yet. Upload your first resume above to begin!</p>
               </div>
             ) : filteredAnalyses.length === 0 ? (
-              <div className="empty-history-box" style={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "10rem" }}>
+              <div className="empty-history-box" style={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "10rem", borderRadius: "12px", borderStyle: "dashed" }}>
                 <p style={{ textAlign: "center", fontSize: "0.8125rem", color: "var(--color-text-muted)" }}>No matches found for &quot;{searchQuery}&quot;.</p>
               </div>
             ) : (
@@ -548,21 +579,42 @@ function Dashboard() {
                     key={item.id} 
                     onClick={() => handleViewAnalysis(item.id)}
                     className={`db-history-item ${activeAnalysis?.id === item.id ? "active" : ""}`}
-                    style={{ padding: "0.75rem 0.875rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                    style={{ padding: "0.75rem 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", borderRadius: "12px", border: "1px solid var(--color-border)", transition: "all 0.2s" }}
                   >
-                    <div className="db-hist-left" style={{ overflow: "hidden", marginRight: "0.5rem" }}>
-                      <span className="db-hist-filename" style={{ display: "block", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{item.originalname}</span>
-                      <span className="db-hist-date" style={{ fontSize: "0.625rem" }}>{new Date(item.createdAt).toLocaleDateString()}</span>
+                    <div className="db-hist-left" style={{ overflow: "hidden", marginRight: "0.5rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "2rem",
+                        height: "2rem",
+                        borderRadius: "8px",
+                        backgroundColor: activeAnalysis?.id === item.id ? "rgba(14, 165, 233, 0.1)" : "rgba(255, 255, 255, 0.03)",
+                        border: "1px solid var(--color-border)",
+                        color: activeAnalysis?.id === item.id ? "var(--color-cyan)" : "var(--color-text-secondary)",
+                        flexShrink: 0
+                      }}>
+                        <svg style={{ width: "1.125rem", height: "1.125rem" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <div style={{ overflow: "hidden" }}>
+                        <span className="db-hist-filename" style={{ display: "block", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", fontSize: "0.8125rem", fontWeight: 600 }}>{item.originalname}</span>
+                        <span className="db-hist-date" style={{ fontSize: "0.625rem", color: "var(--color-text-muted)", display: "block", marginTop: "0.125rem" }}>{new Date(item.createdAt).toLocaleDateString()}</span>
+                      </div>
                     </div>
                     
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                       <div 
                         className="db-hist-score"
                         style={{ 
-                          fontSize: "0.6875rem",
-                          padding: "0.1875rem 0.375rem",
+                          fontSize: "0.75rem",
+                          fontWeight: 700,
+                          padding: "0.1875rem 0.5rem",
+                          borderRadius: "6px",
                           color: item.atsScore >= 70 ? "var(--color-emerald)" : "var(--color-rose)",
                           backgroundColor: item.atsScore >= 70 ? "rgba(16, 185, 129, 0.08)" : "rgba(244, 63, 94, 0.08)",
+                          border: "1px solid",
                           borderColor: item.atsScore >= 70 ? "rgba(16, 185, 129, 0.15)" : "rgba(244, 63, 94, 0.15)"
                         }}
                       >
@@ -571,27 +623,13 @@ function Dashboard() {
                       
                       <div className="db-history-actions" style={{ display: "flex", gap: "0.25rem" }}>
                         <button 
-                          title="View Analysis"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleViewAnalysis(item.id);
-                          }}
-                          className="db-action-icon-btn"
-                          style={{ background: "transparent", border: "none", color: "var(--color-text-muted)", cursor: "pointer", display: "flex", padding: "0.25rem", borderRadius: "4px" }}
-                        >
-                          <svg style={{ width: "0.875rem", height: "0.875rem" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                        </button>
-                        <button 
                           title="Delete Resume"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteResume(item.id);
                           }}
                           className="db-action-icon-btn delete-hover"
-                          style={{ background: "transparent", border: "none", color: "var(--color-text-muted)", cursor: "pointer", display: "flex", padding: "0.25rem", borderRadius: "4px" }}
+                          style={{ background: "transparent", border: "none", color: "var(--color-text-muted)", cursor: "pointer", display: "flex", padding: "0.25rem", borderRadius: "6px" }}
                         >
                           <svg style={{ width: "0.875rem", height: "0.875rem" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -611,7 +649,7 @@ function Dashboard() {
         <div className="dashboard-right">
           {isFetchingResume ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }} className="animate-fade-in">
-              <div className="glass-card" style={{ padding: "2rem" }}>
+              <div className="glass-card" style={{ padding: "2rem", borderRadius: "16px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1.5rem" }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     <div className="skeleton skeleton-text" style={{ width: "6rem", height: "0.75rem" }}></div>
@@ -629,17 +667,17 @@ function Dashboard() {
                 </div>
               </div>
               <div className="dashboard-details-grid">
-                <div className="skeleton skeleton-block" style={{ height: "9.5rem", borderRadius: "0.5rem" }}></div>
-                <div className="skeleton skeleton-block" style={{ height: "9.5rem", borderRadius: "0.5rem" }}></div>
-                <div className="skeleton skeleton-block" style={{ height: "9.5rem", borderRadius: "0.5rem" }}></div>
-                <div className="skeleton skeleton-block" style={{ height: "9.5rem", borderRadius: "0.5rem" }}></div>
+                <div className="skeleton skeleton-block" style={{ height: "9.5rem", borderRadius: "16px" }}></div>
+                <div className="skeleton skeleton-block" style={{ height: "9.5rem", borderRadius: "16px" }}></div>
+                <div className="skeleton skeleton-block" style={{ height: "9.5rem", borderRadius: "16px" }}></div>
+                <div className="skeleton skeleton-block" style={{ height: "9.5rem", borderRadius: "16px" }}></div>
               </div>
             </div>
           ) : activeAnalysis ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
               
-              {/* Dynamic Scorecard */}
-              <div className="glass-card" style={{ padding: "2rem" }}>
+              {/* Dynamic Scorecard at the top */}
+              <div className="glass-card" style={{ padding: "2rem", borderRadius: "16px" }}>
                 
                 <div className="card-header" style={{ borderBottom: "none", paddingBottom: "0", marginBottom: "1.5rem" }}>
                   <div>
@@ -659,25 +697,26 @@ function Dashboard() {
                 </div>
 
                 <div className="card-score-row" style={{ gap: "2rem" }}>
-                  <div className="progress-container" style={{ width: "6rem", height: "6rem" }}>
+                  <div className="progress-container" style={{ width: "6.5rem", height: "6.5rem" }}>
                     <svg className="progress-svg">
-                      <circle className="progress-circle-bg" r="32" cx="40" cy="40" />
+                      <circle className="progress-circle-bg" r="32" cx="40" cy="40" strokeWidth={5} />
                       <circle
                         className="progress-circle-fill"
                         r="32"
                         cx="40"
                         cy="40"
+                        strokeWidth={5}
                         style={{
                           strokeDashoffset: 201 - (201 * activeAnalysis.atsScore) / 100
                         }}
                       />
                     </svg>
-                    <div className="progress-text" style={{ fontSize: "1.25rem" }}>{activeAnalysis.atsScore}%</div>
+                    <div className="progress-text" style={{ fontSize: "1.25rem", fontWeight: 800 }}>{activeAnalysis.atsScore}%</div>
                   </div>
 
                   <div className="card-score-info">
-                    <div className="score-title" style={{ fontSize: "1rem" }}>ATS Match Score</div>
-                    <p className="score-desc" style={{ fontSize: "0.8125rem", maxWidth: "24rem" }}>
+                    <div className="score-title" style={{ fontSize: "1rem", fontWeight: 700 }}>ATS Match Score</div>
+                    <p className="score-desc" style={{ fontSize: "0.8125rem", maxWidth: "24rem", color: "var(--color-text-secondary)", lineHeight: "1.5" }}>
                       This resume matches {activeAnalysis.atsScore}% of target formatting guidelines, action-oriented verbs, and structural applicant tracking filters.
                     </p>
                   </div>
@@ -686,11 +725,13 @@ function Dashboard() {
               </div>
 
               {/* Dynamic Feedback Columns */}
-              <div className="dashboard-details-grid">
+              <div className="dashboard-details-grid" style={{ alignItems: "stretch" }}>
                 
                 {/* Strengths */}
-                <div className="feature-card" style={{ borderLeft: "4px solid var(--color-emerald)" }}>
-                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-emerald)" }}>🏆 Strengths</h4>
+                <div className="feature-card" style={{ borderLeft: "4px solid var(--color-emerald)", borderRadius: "16px", padding: "1.5rem" }}>
+                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-emerald)", display: "flex", alignItems: "center", gap: "0.375rem" }}>
+                    <span>🏆</span> Strengths
+                  </h4>
                   <ul style={{ listStyle: "none", paddingLeft: "0", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     {activeAnalysis.strengths.map((str, idx) => (
                       <li key={idx} style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", lineHeight: "1.4" }}>
@@ -701,8 +742,10 @@ function Dashboard() {
                 </div>
 
                 {/* Weaknesses */}
-                <div className="feature-card" style={{ borderLeft: "4px solid var(--color-rose)" }}>
-                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-rose)" }}>⚠️ Gaps & Formatting Gaps</h4>
+                <div className="feature-card" style={{ borderLeft: "4px solid var(--color-rose)", borderRadius: "16px", padding: "1.5rem" }}>
+                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-rose)", display: "flex", alignItems: "center", gap: "0.375rem" }}>
+                    <span>⚠️</span> Formatting Gaps
+                  </h4>
                   <ul style={{ listStyle: "none", paddingLeft: "0", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     {activeAnalysis.weaknesses.map((weak, idx) => (
                       <li key={idx} style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", lineHeight: "1.4" }}>
@@ -713,11 +756,13 @@ function Dashboard() {
                 </div>
 
                 {/* Missing Skills */}
-                <div className="feature-card" style={{ borderLeft: "4px solid var(--color-purple)" }}>
-                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-purple)" }}>💡 Missing Keywords</h4>
+                <div className="feature-card" style={{ borderLeft: "4px solid var(--color-purple)", borderRadius: "16px", padding: "1.5rem" }}>
+                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-purple)", display: "flex", alignItems: "center", gap: "0.375rem" }}>
+                    <span>💡</span> Missing Keywords
+                  </h4>
                   <div className="pills-container" style={{ marginTop: "0.5rem" }}>
                     {activeAnalysis.missingSkills.map((skill, idx) => (
-                      <span key={idx} className="pill pill-danger" style={{ textTransform: "none", fontSize: "0.6875rem", padding: "0.25rem 0.5rem" }}>
+                      <span key={idx} className="pill pill-danger" style={{ textTransform: "none", fontSize: "0.6875rem", padding: "0.25rem 0.5rem", borderRadius: "6px" }}>
                         {skill}
                       </span>
                     ))}
@@ -725,8 +770,10 @@ function Dashboard() {
                 </div>
 
                 {/* Suggestions */}
-                <div className="feature-card" style={{ borderLeft: "4px solid var(--color-cyan)" }}>
-                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-cyan)" }}>🚀 Recommendations</h4>
+                <div className="feature-card" style={{ borderLeft: "4px solid var(--color-cyan)", borderRadius: "16px", padding: "1.5rem" }}>
+                  <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-cyan)", display: "flex", alignItems: "center", gap: "0.375rem" }}>
+                    <span>🚀</span> Recommendations
+                  </h4>
                   <ul style={{ listStyle: "none", paddingLeft: "0", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     {activeAnalysis.suggestions.map((sug, idx) => (
                       <li key={idx} style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", lineHeight: "1.4" }}>
@@ -740,12 +787,27 @@ function Dashboard() {
 
             </div>
           ) : (
-            <div className="empty-analysis-box glass-card">
-              <svg style={{ width: "3.5rem", height: "3.5rem", color: "var(--color-text-muted)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <h3>No Active Scan Loaded</h3>
-              <p>Upload a new resume PDF on the left panel, or select an entry from your Scan History to load detailed evaluations.</p>
+            <div className="empty-analysis-box glass-card" style={{ borderRadius: "16px", backgroundColor: "rgba(17, 24, 39, 0.4)", padding: "5rem 2rem" }}>
+              <div style={{
+                width: "4rem",
+                height: "4rem",
+                borderRadius: "50%",
+                backgroundColor: "rgba(255, 255, 255, 0.02)",
+                border: "1px solid var(--color-border)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--color-text-muted)",
+                marginBottom: "1rem"
+              }}>
+                <svg style={{ width: "2rem", height: "2rem" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 style={{ fontSize: "1.125rem", fontWeight: 700, color: "#ffffff" }}>No Active Scan Loaded</h3>
+              <p style={{ fontSize: "0.8125rem", color: "var(--color-text-muted)", maxWidth: "24rem", lineHeight: "1.5" }}>
+                Upload a new resume PDF in the scanner panel on the left, or select a logged entry from your Scan History to load detailed evaluations.
+              </p>
             </div>
           )}
         </div>

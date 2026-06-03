@@ -15,9 +15,11 @@ const generateToken = (id) => {
 export const registerUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
+    console.log(`[Auth Controller] Register request received for email: ${email}, name: ${name}`);
 
     // Validations
     if (!name || !email || !password) {
+      console.log(`[Auth Controller] Register validation failed: missing fields`);
       return res.status(400).json({
         success: false,
         error: 'Please provide name, email, and password.'
@@ -25,6 +27,7 @@ export const registerUser = async (req, res, next) => {
     }
 
     if (password.length < 6) {
+      console.log(`[Auth Controller] Register validation failed: password too short`);
       return res.status(400).json({
         success: false,
         error: 'Password must be at least 6 characters long.'
@@ -34,6 +37,7 @@ export const registerUser = async (req, res, next) => {
     // Check if email already registered
     const userExists = await User.findByEmail(email);
     if (userExists) {
+      console.log(`[Auth Controller] Register failed: User already exists: ${email}`);
       return res.status(400).json({
         success: false,
         error: 'An account with that email already exists.'
@@ -42,15 +46,22 @@ export const registerUser = async (req, res, next) => {
 
     // Create user in db
     const user = await User.create({ name, email, password });
+    console.log(`[Auth Controller] User document created in DB: ${user.email}, ID: ${user.id}`);
     const token = generateToken(user.id);
 
     // Send email verification link
     const verificationUrl = `${req.protocol}://${req.get('host')}/verify-email?token=${user.verificationToken}`;
-    await sendMail({
-      to: user.email,
-      subject: 'Verify your ResumeAI Account',
-      text: `Hello ${user.name},\n\nPlease verify your ResumeAI account by navigating to this link:\n${verificationUrl}\n\nThank you!`
-    });
+    try {
+      await sendMail({
+        to: user.email,
+        subject: 'Verify your ResumeAI Account',
+        text: `Hello ${user.name},\n\nPlease verify your ResumeAI account by navigating to this link:\n${verificationUrl}\n\nThank you!`
+      });
+      console.log(`[Auth Controller] Verification mail sent to ${user.email}`);
+    } catch (mailErr) {
+      console.error(`[Auth Controller] Failed to send verification mail:`, mailErr.message);
+      // In development, do not crash registration if mailer fails
+    }
 
     return res.status(201).json({
       success: true,
@@ -58,6 +69,7 @@ export const registerUser = async (req, res, next) => {
       user
     });
   } catch (error) {
+    console.error(`[Auth Controller] Registration exception:`, error);
     next(error);
   }
 };
@@ -65,8 +77,10 @@ export const registerUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log(`[Auth Controller] Login request received for email: ${email}`);
 
     if (!email || !password) {
+      console.log(`[Auth Controller] Login validation failed: missing fields`);
       return res.status(400).json({
         success: false,
         error: 'Please provide email and password.'
@@ -76,6 +90,7 @@ export const loginUser = async (req, res, next) => {
     // Lookup user email
     const user = await User.findByEmail(email);
     if (!user) {
+      console.log(`[Auth Controller] Login failed: No user found for email: ${email}`);
       return res.status(401).json({
         success: false,
         error: 'Invalid email or password.'
@@ -85,12 +100,14 @@ export const loginUser = async (req, res, next) => {
     // Verify hashed password
     const isMatch = await User.verifyPassword(password, user.password);
     if (!isMatch) {
+      console.log(`[Auth Controller] Login failed: Hashed password mismatch for email: ${email}`);
       return res.status(401).json({
         success: false,
         error: 'Invalid email or password.'
       });
     }
 
+    console.log(`[Auth Controller] User logged in successfully: ${email}, ID: ${user.id}`);
     const token = generateToken(user.id);
     const { password: _, ...userWithoutPassword } = user;
 
@@ -100,6 +117,7 @@ export const loginUser = async (req, res, next) => {
       user: userWithoutPassword
     });
   } catch (error) {
+    console.error(`[Auth Controller] Login exception:`, error);
     next(error);
   }
 };
