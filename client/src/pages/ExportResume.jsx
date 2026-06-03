@@ -4,46 +4,21 @@ import { API_BASE } from "../utils/api.js";
 
 function ExportResume() {
   // Resume Datasets States
-  const [name, setName] = useState("John Doe");
-  const [email, setEmail] = useState("johndoe@example.com");
-  const [phone, setPhone] = useState("+1 (555) 123-4567");
-  const [location, setLocation] = useState("San Francisco, CA");
-  const [links, setLinks] = useState("linkedin.com/in/johndoe  |  github.com/johndoe");
-  const [skillsText, setSkillsText] = useState("React.js, Node.js, Express.js, TypeScript, RESTful APIs, Git, Docker, Jest, CI/CD");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [location, setLocation] = useState("");
+  const [links, setLinks] = useState("");
+  const [skillsText, setSkillsText] = useState("");
 
   // Work Experience Items
-  const [experience, setExperience] = useState([
-    {
-      role: "Senior Software Engineer",
-      company: "Tech Innovation Corp",
-      duration: "2023 - Present",
-      description: "\u2022 Engineered a cloud-native microservices architecture handling over 1.2M queries daily.\n\u2022 Spearheaded frontend refactoring to React and Redux, improving load speeds by 30%.\n\u2022 Led a team of 4 devs, conducting reviews and streamlining CI/CD deployment pipelines."
-    },
-    {
-      role: "Software Developer",
-      company: "Beta Systems Inc",
-      duration: "2020 - 2023",
-      description: "\u2022 Built responsive web dashboard pages utilizing TypeScript, HTML5, and SASS/CSS.\n\u2022 Implemented Node.js API endpoints and database migrations, shaving 150ms off search latencies."
-    }
-  ]);
+  const [experience, setExperience] = useState([]);
 
   // Projects Items
-  const [projects, setProjects] = useState([
-    {
-      title: "AI ATS Optimizer Scanner",
-      technologies: ["React.js", "Node.js", "Gemini API", "CSS3"],
-      description: "\u2022 Designed a glassmorphic MERN portal evaluating resume text against automated recuriter filters.\n\u2022 Integrated pdf-parse and gemini-2.5-flash for structured JSON response evaluation metrics."
-    }
-  ]);
+  const [projects, setProjects] = useState([]);
 
   // Education Items
-  const [education, setEducation] = useState([
-    {
-      degree: "B.S. in Computer Science",
-      school: "State University",
-      year: "2016 - 2020"
-    }
-  ]);
+  const [education, setEducation] = useState([]);
 
   // Exporter configs
   const [template, setTemplate] = useState("ats"); // 'ats' | 'modern' | 'minimal'
@@ -55,6 +30,17 @@ function ExportResume() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Auto-populate from logged-in user data
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser.name) setName(parsedUser.name);
+        if (parsedUser.email) setEmail(parsedUser.email);
+      } catch (e) {
+        console.error("Error parsing user from localStorage", e);
+      }
+    }
     fetchExportHistory();
   }, [navigate]);
 
@@ -256,7 +242,7 @@ function ExportResume() {
               <div 
                 onClick={() => setTemplate("ats")}
                 className={`template-select-card ${template === "ats" ? "active" : ""}`}
-                style={{ padding: "0.75rem", borderRadius: "6px", border: template === "ats" ? "2px solid var(--color-emerald)" : "1px solid var(--color-border)", backgroundColor: template === "ats" ? "rgba(16, 185, 129, 0.05)" : "rgba(15, 23, 42, 0.3)", cursor: "pointer", display: "flex", flexDirection: "column", gap: "0.15rem", textAlign: "left" }}
+                style={{ padding: "0.75rem", borderRadius: "6px", border: template === "ats" ? "2px solid var(--color-emerald)" : "1px solid var(--color-border)", backgroundColor: template === "ats" ? "rgba(16, 185, 129, 0.05)" : "var(--color-bg-inset)", cursor: "pointer", display: "flex", flexDirection: "column", gap: "0.15rem", textAlign: "left" }}
               >
                 <span style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--color-text-primary)" }}>ATS Friendly</span>
                 <span style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Black & white centered list, optimized for automated screening.</span>
@@ -265,7 +251,7 @@ function ExportResume() {
               <div 
                 onClick={() => setTemplate("modern")}
                 className={`template-select-card ${template === "modern" ? "active" : ""}`}
-                style={{ padding: "0.75rem", borderRadius: "6px", border: template === "modern" ? "2px solid var(--color-emerald)" : "1px solid var(--color-border)", backgroundColor: template === "modern" ? "rgba(16, 185, 129, 0.05)" : "rgba(15, 23, 42, 0.3)", cursor: "pointer", display: "flex", flexDirection: "column", gap: "0.15rem", textAlign: "left" }}
+                style={{ padding: "0.75rem", borderRadius: "6px", border: template === "modern" ? "2px solid var(--color-emerald)" : "1px solid var(--color-border)", backgroundColor: template === "modern" ? "rgba(16, 185, 129, 0.05)" : "var(--color-bg-inset)", cursor: "pointer", display: "flex", flexDirection: "column", gap: "0.15rem", textAlign: "left" }}
               >
                 <span style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--color-text-primary)" }}>Modern Professional</span>
                 <span style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Stylish header underlines, elegant colored header accents.</span>
@@ -274,7 +260,7 @@ function ExportResume() {
               <div 
                 onClick={() => setTemplate("minimal")}
                 className={`template-select-card ${template === "minimal" ? "active" : ""}`}
-                style={{ padding: "0.75rem", borderRadius: "6px", border: template === "minimal" ? "2px solid var(--color-emerald)" : "1px solid var(--color-border)", backgroundColor: template === "minimal" ? "rgba(16, 185, 129, 0.05)" : "rgba(15, 23, 42, 0.3)", cursor: "pointer", display: "flex", flexDirection: "column", gap: "0.15rem", textAlign: "left" }}
+                style={{ padding: "0.75rem", borderRadius: "6px", border: template === "minimal" ? "2px solid var(--color-emerald)" : "1px solid var(--color-border)", backgroundColor: template === "minimal" ? "rgba(16, 185, 129, 0.05)" : "var(--color-bg-inset)", cursor: "pointer", display: "flex", flexDirection: "column", gap: "0.15rem", textAlign: "left" }}
               >
                 <span style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--color-text-primary)" }}>Minimal Clean</span>
                 <span style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Sleek whitespace spacing, light dividers, neat layout.</span>
@@ -372,31 +358,31 @@ function ExportResume() {
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.75rem" }}>
                   <div>
                     <label style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)" }}>Full Name</label>
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your full name" style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
                   </div>
                   <div>
                     <label style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)" }}>Email Address</label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address" style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
                   </div>
                   <div>
                     <label style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)" }}>Phone Number</label>
-                    <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
+                    <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Enter your phone number" style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
                   </div>
                   <div>
                     <label style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)" }}>Location (City, State)</label>
-                    <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
+                    <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="City, State" style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
                   </div>
                 </div>
                 <div style={{ marginTop: "0.75rem" }}>
                   <label style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)" }}>Portfolio / Social Links</label>
-                  <input type="text" value={links} onChange={(e) => setLinks(e.target.value)} style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
+                  <input type="text" value={links} onChange={(e) => setLinks(e.target.value)} placeholder="LinkedIn, GitHub, Portfolio URL" style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.25rem" }} />
                 </div>
               </div>
 
               {/* Skills section */}
               <div className="form-section">
-                <h4 style={{ fontSize: "0.875rem", color: "var(--color-emerald)", borderBottom: "1px solid var(--color-border)", paddingBottom: "0.25rem", marginBottom: "0.75rem" }}>Core Skills (Comma separated)</h4>
-                <textarea rows={2} value={skillsText} onChange={(e) => setSkillsText(e.target.value)} style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", resize: "vertical", fontFamily: "inherit" }} />
+                <h4 style={{ fontSize: "0.875rem", color: "var(--color-emerald)", borderBottom: "1px solid var(--color-border)", paddingBottom: "0.25rem", marginBottom: "0.75rem" }}>Technical Skills</h4>
+                <textarea rows={2} value={skillsText} onChange={(e) => setSkillsText(e.target.value)} placeholder="React, Node.js, MongoDB, JavaScript" style={{ width: "100%", padding: "0.5rem", fontSize: "0.8125rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", resize: "vertical", fontFamily: "inherit" }} />
               </div>
 
               {/* Work Experience section */}
@@ -408,26 +394,26 @@ function ExportResume() {
                 
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   {experience.map((exp, idx) => (
-                    <div key={idx} style={{ padding: "0.75rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.3)", position: "relative" }}>
+                    <div key={idx} style={{ padding: "0.75rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "var(--color-bg-inset)", position: "relative" }}>
                       <button type="button" onClick={() => handleRemoveExperience(idx)} style={{ position: "absolute", right: "0.5rem", top: "0.5rem", background: "transparent", border: "none", color: "var(--color-rose)", cursor: "pointer", fontWeight: 700 }}>✕</button>
                       
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "0.5rem", marginBottom: "0.5rem" }}>
                         <div>
                           <label style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Job Title / Role</label>
-                          <input type="text" value={exp.role} onChange={(e) => handleUpdateExperience(idx, "role", e.target.value)} style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
+                          <input type="text" value={exp.role} onChange={(e) => handleUpdateExperience(idx, "role", e.target.value)} placeholder="e.g. Senior Software Engineer" style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
                         </div>
                         <div>
                           <label style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Company Name</label>
-                          <input type="text" value={exp.company} onChange={(e) => handleUpdateExperience(idx, "company", e.target.value)} style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
+                          <input type="text" value={exp.company} onChange={(e) => handleUpdateExperience(idx, "company", e.target.value)} placeholder="e.g. Google" style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
                         </div>
                         <div>
                           <label style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Duration / Dates</label>
-                          <input type="text" value={exp.duration} onChange={(e) => handleUpdateExperience(idx, "duration", e.target.value)} style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
+                          <input type="text" value={exp.duration} onChange={(e) => handleUpdateExperience(idx, "duration", e.target.value)} placeholder="e.g. Jan 2023 - Present" style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
                         </div>
                       </div>
                       <div>
                         <label style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Description (Paste your AI-rewritten bullets here!)</label>
-                        <textarea rows={4} value={exp.description} onChange={(e) => handleUpdateExperience(idx, "description", e.target.value)} style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", resize: "vertical", marginTop: "0.15rem", fontFamily: "inherit" }} />
+                        <textarea rows={4} value={exp.description} onChange={(e) => handleUpdateExperience(idx, "description", e.target.value)} placeholder="e.g. • Engineered microservices&#10;• Led frontend refactoring" style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", resize: "vertical", marginTop: "0.15rem", fontFamily: "inherit" }} />
                       </div>
                     </div>
                   ))}
@@ -443,22 +429,22 @@ function ExportResume() {
                 
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   {projects.map((proj, idx) => (
-                    <div key={idx} style={{ padding: "0.75rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.3)", position: "relative" }}>
+                    <div key={idx} style={{ padding: "0.75rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "var(--color-bg-inset)", position: "relative" }}>
                       <button type="button" onClick={() => handleRemoveProject(idx)} style={{ position: "absolute", right: "0.5rem", top: "0.5rem", background: "transparent", border: "none", color: "var(--color-rose)", cursor: "pointer", fontWeight: 700 }}>✕</button>
                       
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>
                         <div>
                           <label style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Project Title</label>
-                          <input type="text" value={proj.title} onChange={(e) => handleUpdateProject(idx, "title", e.target.value)} style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
+                          <input type="text" value={proj.title} onChange={(e) => handleUpdateProject(idx, "title", e.target.value)} placeholder="e.g. AI Resume Scanner" style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
                         </div>
                         <div>
                           <label style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Technologies (Comma separated)</label>
-                          <input type="text" value={proj.technologies ? proj.technologies.join(", ") : ""} onChange={(e) => handleUpdateProject(idx, "technologies", e.target.value)} style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
+                          <input type="text" value={proj.technologies ? proj.technologies.join(", ") : ""} onChange={(e) => handleUpdateProject(idx, "technologies", e.target.value)} placeholder="e.g. React, Gemini, Node.js" style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
                         </div>
                       </div>
                       <div>
                         <label style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>Project Description</label>
-                        <textarea rows={3} value={proj.description} onChange={(e) => handleUpdateProject(idx, "description", e.target.value)} style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", resize: "vertical", marginTop: "0.15rem", fontFamily: "inherit" }} />
+                        <textarea rows={3} value={proj.description} onChange={(e) => handleUpdateProject(idx, "description", e.target.value)} placeholder="e.g. Designed a glassmorphic MERN portal evaluating resume text..." style={{ width: "100%", padding: "0.375rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", resize: "vertical", marginTop: "0.15rem", fontFamily: "inherit" }} />
                       </div>
                     </div>
                   ))}
@@ -474,18 +460,18 @@ function ExportResume() {
                 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                   {education.map((edu, idx) => (
-                    <div key={idx} style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr 0.8fr auto", gap: "0.5rem", alignItems: "end", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.2)" }}>
+                    <div key={idx} style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr 0.8fr auto", gap: "0.5rem", alignItems: "end", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "var(--color-bg-inset)" }}>
                       <div>
                         <label style={{ fontSize: "0.625rem", color: "var(--color-text-muted)" }}>Degree / Course</label>
-                        <input type="text" value={edu.degree} onChange={(e) => handleUpdateEducation(idx, "degree", e.target.value)} style={{ width: "100%", padding: "0.25rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
+                        <input type="text" value={edu.degree} onChange={(e) => handleUpdateEducation(idx, "degree", e.target.value)} placeholder="e.g. B.S. in Computer Science" style={{ width: "100%", padding: "0.25rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
                       </div>
                       <div>
                         <label style={{ fontSize: "0.625rem", color: "var(--color-text-muted)" }}>School / University</label>
-                        <input type="text" value={edu.school} onChange={(e) => handleUpdateEducation(idx, "school", e.target.value)} style={{ width: "100%", padding: "0.25rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
+                        <input type="text" value={edu.school} onChange={(e) => handleUpdateEducation(idx, "school", e.target.value)} placeholder="e.g. Stanford University" style={{ width: "100%", padding: "0.25rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
                       </div>
                       <div>
                         <label style={{ fontSize: "0.625rem", color: "var(--color-text-muted)" }}>Year / Dates</label>
-                        <input type="text" value={edu.year} onChange={(e) => handleUpdateEducation(idx, "year", e.target.value)} style={{ width: "100%", padding: "0.25rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
+                        <input type="text" value={edu.year} onChange={(e) => handleUpdateEducation(idx, "year", e.target.value)} placeholder="e.g. 2018 - 2022" style={{ width: "100%", padding: "0.25rem", fontSize: "0.75rem", borderRadius: "4px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", marginTop: "0.15rem" }} />
                       </div>
                       <button type="button" onClick={() => handleRemoveEducation(idx)} style={{ padding: "0.25rem 0.5rem", color: "var(--color-rose)", background: "transparent", border: "none", cursor: "pointer", fontWeight: 700 }}>✕</button>
                     </div>

@@ -9,15 +9,15 @@ function ResumeRewriter() {
   const [targetRole, setTargetRole] = useState("");
   const [inputType, setInputType] = useState("dropdown"); // 'dropdown' | 'manual'
   const [rewriteHistory, setRewriteHistory] = useState([]);
-  
+
   // Loading & State variables
   const [loading, setLoading] = useState(true);
   const [isRewriting, setIsRewriting] = useState(false);
   const [error, setError] = useState("");
-  
+
   // Loaded Active Report (null means input form is visible)
   const [activeRewrite, setActiveRewrite] = useState(null);
-  
+
   // Result Display Tab (for comparison)
   const [resultTab, setResultTab] = useState("rewritten"); // 'rewritten' | 'original' | 'compare'
 
@@ -252,12 +252,12 @@ function ResumeRewriter() {
       </header>
 
       <div className="dashboard-grid container">
-        
+
         {/* Left Column: History list */}
         <div className="dashboard-left">
           <div className="glass-card db-card" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             <h3 className="card-section-title">Rewrite Logs</h3>
-            
+
             {rewriteHistory.length === 0 ? (
               <div className="empty-history-box" style={{ flexGrow: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <p style={{ textAlign: "center", fontSize: "0.8125rem", color: "var(--color-text-muted)" }}>
@@ -267,8 +267,8 @@ function ResumeRewriter() {
             ) : (
               <div className="db-history-list" style={{ flexGrow: 1, overflowY: "auto" }}>
                 {rewriteHistory.map((item) => (
-                  <div 
-                    key={item.id} 
+                  <div
+                    key={item.id}
                     onClick={() => loadPastRewrite(item.id)}
                     className={`db-history-item ${activeRewrite?.id === item.id ? "active" : ""}`}
                     style={{ padding: "0.75rem 0.875rem" }}
@@ -289,7 +289,7 @@ function ResumeRewriter() {
               </div>
             )}
 
-            <button 
+            <button
               onClick={() => {
                 setActiveRewrite(null);
                 setTargetRole("");
@@ -304,7 +304,7 @@ function ResumeRewriter() {
 
         {/* Right Column: Work area / results comparison */}
         <div className="dashboard-right">
-          
+
           {isRewriting ? (
             <div className="glass-card" style={{ padding: "3rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "25rem" }}>
               <div className="spinner" style={{ width: "3rem", height: "3rem", borderWidth: "3px", borderColor: "var(--color-cyan) transparent" }}></div>
@@ -316,16 +316,16 @@ function ResumeRewriter() {
           ) : activeRewrite ? (
             /* Results Screen */
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-              
+
               <div className="glass-card" style={{ padding: "2rem" }}>
-                
+
                 {/* Header Actions */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--color-border)", paddingBottom: "1rem", marginBottom: "1.5rem" }}>
                   <div>
                     <span className="card-title-sub">Target Role: {activeRewrite.targetRole}</span>
                     <h3 className="card-title-main" style={{ fontSize: "1.125rem", wordBreak: "break-all", margin: 0 }}>{activeRewrite.originalname}</h3>
                   </div>
-                  
+
                   <div style={{ display: "flex", gap: "0.5rem" }}>
                     <button onClick={handleCopyToClipboard} className="btn btn-secondary btn-sm" style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.6875rem", padding: "0.375rem 0.75rem" }}>
                       <svg style={{ width: "0.875rem", height: "0.875rem" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -344,21 +344,21 @@ function ResumeRewriter() {
 
                 {/* Tab select headers */}
                 <div style={{ display: "flex", borderBottom: "1px solid var(--color-border)", marginBottom: "1.5rem" }}>
-                  <button 
+                  <button
                     onClick={() => setResultTab("rewritten")}
                     className={`nav-link ${resultTab === "rewritten" ? "active" : ""}`}
                     style={{ background: "transparent", border: "none", fontSize: "0.8125rem", padding: "0.5rem 1rem", borderBottom: resultTab === "rewritten" ? "2px solid var(--color-cyan)" : "none", color: resultTab === "rewritten" ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
                   >
                     AI Rewritten Version
                   </button>
-                  <button 
+                  <button
                     onClick={() => setResultTab("original")}
                     className={`nav-link ${resultTab === "original" ? "active" : ""}`}
                     style={{ background: "transparent", border: "none", fontSize: "0.8125rem", padding: "0.5rem 1rem", borderBottom: resultTab === "original" ? "2px solid var(--color-cyan)" : "none", color: resultTab === "original" ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
                   >
                     Original Version
                   </button>
-                  <button 
+                  <button
                     onClick={() => setResultTab("compare")}
                     className={`nav-link ${resultTab === "compare" ? "active" : ""}`}
                     style={{ background: "transparent", border: "none", fontSize: "0.8125rem", padding: "0.5rem 1rem", borderBottom: resultTab === "compare" ? "2px solid var(--color-cyan)" : "none", color: resultTab === "compare" ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
@@ -370,13 +370,13 @@ function ResumeRewriter() {
                 {/* Tab content wrapper */}
                 <div>
                   {resultTab === "rewritten" && (
-                    <div style={{ backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "1.25rem", fontSize: "0.8125rem", color: "var(--color-text-secondary)", whiteSpace: "pre-wrap", lineHeight: "1.6", maxHeight: "25rem", overflowY: "auto", textAlign: "left" }}>
+                    <div style={{ backgroundColor: "var(--color-bg-inset)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "1.25rem", fontSize: "0.8125rem", color: "var(--color-text-secondary)", whiteSpace: "pre-wrap", lineHeight: "1.6", maxHeight: "25rem", overflowY: "auto", textAlign: "left" }}>
                       {activeRewrite.rewrittenContent}
                     </div>
                   )}
 
                   {resultTab === "original" && (
-                    <div style={{ backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "1.25rem", fontSize: "0.8125rem", color: "var(--color-text-muted)", whiteSpace: "pre-wrap", lineHeight: "1.6", maxHeight: "25rem", overflowY: "auto", textAlign: "left" }}>
+                    <div style={{ backgroundColor: "var(--color-bg-inset)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "1.25rem", fontSize: "0.8125rem", color: "var(--color-text-muted)", whiteSpace: "pre-wrap", lineHeight: "1.6", maxHeight: "25rem", overflowY: "auto", textAlign: "left" }}>
                       {activeRewrite.originalContent}
                     </div>
                   )}
@@ -385,13 +385,13 @@ function ResumeRewriter() {
                     <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                       <div style={{ flex: "1 1 300px" }}>
                         <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--color-text-muted)", marginBottom: "0.5rem", textAlign: "left" }}>Original</div>
-                        <div style={{ backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "1rem", fontSize: "0.75rem", color: "var(--color-text-muted)", whiteSpace: "pre-wrap", lineHeight: "1.5", height: "20rem", overflowY: "auto", textAlign: "left" }}>
+                        <div style={{ backgroundColor: "var(--color-bg-inset)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "1rem", fontSize: "0.75rem", color: "var(--color-text-muted)", whiteSpace: "pre-wrap", lineHeight: "1.5", height: "20rem", overflowY: "auto", textAlign: "left" }}>
                           {activeRewrite.originalContent}
                         </div>
                       </div>
                       <div style={{ flex: "1 1 300px" }}>
                         <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--color-text-secondary)", marginBottom: "0.5rem", textAlign: "left" }}>AI Rewritten</div>
-                        <div style={{ backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "1rem", fontSize: "0.75rem", color: "var(--color-text-secondary)", whiteSpace: "pre-wrap", lineHeight: "1.5", height: "20rem", overflowY: "auto", textAlign: "left" }}>
+                        <div style={{ backgroundColor: "var(--color-bg-inset)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "1rem", fontSize: "0.75rem", color: "var(--color-text-secondary)", whiteSpace: "pre-wrap", lineHeight: "1.5", height: "20rem", overflowY: "auto", textAlign: "left" }}>
                           {activeRewrite.rewrittenContent}
                         </div>
                       </div>
@@ -403,7 +403,7 @@ function ResumeRewriter() {
 
               {/* Improvements details */}
               <div className="dashboard-details-grid" style={{ gridTemplateColumns: "1fr 1fr" }}>
-                
+
                 {/* Improvements Made */}
                 <div className="feature-card" style={{ borderLeft: "4px solid var(--color-cyan)" }}>
                   <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-cyan)" }}>🚀 Improvements Made</h4>
@@ -444,7 +444,7 @@ function ResumeRewriter() {
               )}
 
               <form onSubmit={handleRewrite} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-                
+
                 {/* Input Method Toggle */}
                 <div>
                   <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 700, color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>
@@ -468,7 +468,7 @@ function ResumeRewriter() {
                       Paste Text Manually
                     </button>
                   </div>
-                  
+
                   {inputType === "dropdown" ? (
                     <div>
                       {resumes.length === 0 ? (
@@ -479,7 +479,7 @@ function ResumeRewriter() {
                         <select
                           value={selectedResumeId}
                           onChange={(e) => setSelectedResumeId(e.target.value)}
-                          style={{ width: "100%", padding: "0.625rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", outline: "none", cursor: "pointer" }}
+                          style={{ width: "100%", padding: "0.625rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", outline: "none", cursor: "pointer" }}
                         >
                           {resumes.map((r) => (
                             <option key={r.id} value={r.id}>
@@ -495,7 +495,7 @@ function ResumeRewriter() {
                       placeholder="Paste your resume content, experience bullets, or project descriptions here..."
                       value={manualText}
                       onChange={(e) => setManualText(e.target.value)}
-                      style={{ width: "100%", padding: "0.75rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", outline: "none", resize: "vertical", fontFamily: "inherit" }}
+                      style={{ width: "100%", padding: "0.75rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", outline: "none", resize: "vertical", fontFamily: "inherit" }}
                     />
                   )}
                 </div>
@@ -510,7 +510,7 @@ function ResumeRewriter() {
                     placeholder="e.g. Senior React Developer, Product Manager..."
                     value={targetRole}
                     onChange={(e) => setTargetRole(e.target.value)}
-                    style={{ width: "100%", padding: "0.625rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", outline: "none" }}
+                    style={{ width: "100%", padding: "0.625rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", outline: "none" }}
                   />
                 </div>
 

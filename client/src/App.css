@@ -124,6 +124,12 @@
   gap: 2rem;
 }
 
+@media (max-width: 640px) {
+  .navbar-logo-section .brand-logo-text {
+    display: none !important;
+  }
+}
+
 @media (min-width: 768px) {
   .navbar-nav {
     display: flex;
@@ -359,7 +365,7 @@
 
 .progress-circle-bg {
   fill: transparent;
-  stroke: #1e293b;
+  stroke: var(--color-border);
   stroke-width: 5.5;
 }
 
@@ -1051,6 +1057,7 @@
     opacity: 0;
     transform: translateY(20px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1086,7 +1093,8 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 1.5rem;
-  min-height: calc(100vh - 4.5rem - 12rem); /* total height minus header/footer */
+  min-height: calc(100vh - 4.5rem - 12rem);
+  /* total height minus header/footer */
 }
 
 .auth-card {
@@ -1267,6 +1275,24 @@
   }
 }
 
+.analytics-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .analytics-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .analytics-metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 .dashboard-left {
   display: flex;
   flex-direction: column;
@@ -1310,9 +1336,11 @@
 .db-history-list::-webkit-scrollbar {
   width: 4px;
 }
+
 .db-history-list::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .db-history-list::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: 99px;
@@ -1424,12 +1452,10 @@
 
 /* Shimmering Skeleton Loader Animations */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(255, 255, 255, 0.08) 37%,
-    rgba(255, 255, 255, 0.03) 63%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.08) 37%,
+      rgba(255, 255, 255, 0.03) 63%);
   background-size: 400% 100%;
   animation: shimmer 1.4s ease infinite;
 }
@@ -1438,6 +1464,7 @@
   0% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -1520,4 +1547,74 @@
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35) !important;
   background-color: rgba(30, 41, 59, 0.45) !important;
+}
+
+/* --- PREMIUM LIGHT THEME REDESIGN OVERRIDES --- */
+[data-theme="light"] {
+  /* Metrics card overrides - border top instead of border left */
+  --emerald-border: var(--color-emerald);
+  --cyan-border: var(--color-cyan);
+  --indigo-border: var(--color-indigo);
+  --purple-border: var(--color-purple);
+  --rose-border: var(--color-rose);
+  --orange-border: #F59E0B;
+}
+
+[data-theme="light"] .navbar {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme="light"] .cta-card {
+  background: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .pricing-card {
+  background-color: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .pricing-card-featured {
+  background: #FFFFFF !important;
+  border: 2px solid #3b82f6 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .analytics-metrics-grid .glass-card {
+  border-left: none !important;
+  border-top-width: 4px !important;
+  border-top-style: solid !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+[data-theme="light"] .analytics-metrics-grid .glass-card:nth-child(1) { border-top-color: var(--color-emerald) !important; }
+[data-theme="light"] .analytics-metrics-grid .glass-card:nth-child(2) { border-top-color: var(--color-cyan) !important; }
+[data-theme="light"] .analytics-metrics-grid .glass-card:nth-child(3) { border-top-color: var(--color-indigo) !important; }
+[data-theme="light"] .analytics-metrics-grid .glass-card:nth-child(4) { border-top-color: var(--color-purple) !important; }
+[data-theme="light"] .analytics-metrics-grid .glass-card:nth-child(5) { border-top-color: var(--color-rose) !important; }
+[data-theme="light"] .analytics-metrics-grid .glass-card:nth-child(6) { border-top-color: #F59E0B !important; }
+
+/* Keep card hover backgrounds white, and apply soft shadow in light mode */
+[data-theme="light"] .glass-card[style*="border-left"]:hover {
+  background-color: #FFFFFF !important;
+  box-shadow: var(--shadow-card-hover) !important;
+}
+
+/* User profile page and other cards hover fixes */
+[data-theme="light"] .glass-card:hover {
+  box-shadow: var(--shadow-card-hover) !important;
+}
+
+/* Fix Quick Action Cards background hover styling */
+[data-theme="light"] .quick-actions-grid .glass-card:hover {
+  background-color: #FFFFFF !important;
+  box-shadow: var(--shadow-card-hover) !important;
+}
+
+/* Testimonial and feature card overrides */
+[data-theme="light"] .testimonial-card:hover,
+[data-theme="light"] .feature-card:hover {
+  box-shadow: var(--shadow-card-hover) !important;
 }

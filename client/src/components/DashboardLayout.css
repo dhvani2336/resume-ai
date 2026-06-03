@@ -215,7 +215,7 @@
   display: none;
   background: none;
   border: none;
-  color: white;
+  color: var(--color-text-primary);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 8px;
@@ -330,7 +330,7 @@
   font-size: 1.75rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: var(--color-text-primary);
   line-height: 1.1;
 }
 

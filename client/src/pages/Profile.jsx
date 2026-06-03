@@ -6,7 +6,7 @@ function Profile() {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -15,10 +15,10 @@ function Profile() {
   const [profileLoading, setProfileLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
-  
+
   const [message, setMessage] = useState({ text: "", type: "" });
   const [error, setError] = useState("");
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -236,8 +236,8 @@ function Profile() {
     );
   }
 
-  const avatarUrl = user.profilePhoto 
-    ? `${API_BASE}${user.profilePhoto}` 
+  const avatarUrl = user.profilePhoto
+    ? `${API_BASE}${user.profilePhoto}`
     : `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user.name)}`;
 
   return (
@@ -273,9 +273,9 @@ function Profile() {
         )}
 
         {message.text && (
-          <div className="glass-card animate-toast-slide" style={{ 
-            padding: "1rem", 
-            marginBottom: "2rem", 
+          <div className="glass-card animate-toast-slide" style={{
+            padding: "1rem",
+            marginBottom: "2rem",
             borderLeft: `4px solid ${message.type === "success" ? "var(--color-emerald)" : "var(--color-rose)"}`,
             backgroundColor: "rgba(17, 24, 39, 0.8)"
           }}>
@@ -288,7 +288,7 @@ function Profile() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }}>
           {/* Main Layout Grid */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem" }}>
-            
+
             {/* LEFT COLUMN: Image & Status details */}
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
               {/* Profile Card */}
@@ -310,13 +310,13 @@ function Profile() {
 
                 <h3 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--color-text-primary)", marginBottom: "0.25rem" }}>{user.name}</h3>
                 <p style={{ color: "var(--color-text-secondary)", fontSize: "0.875rem", marginBottom: "1.5rem" }}>{user.email}</p>
-                
+
                 <hr style={{ border: 0, borderTop: "1px solid var(--color-border)", margin: "1.5rem 0" }} />
 
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                   <div>
                     <div style={{ fontSize: "0.75rem", textTransform: "uppercase", tracking: "0.05em", color: "var(--color-text-muted)", marginBottom: "0.25rem" }}>Role</div>
-                    <span className="badge" style={{ 
+                    <span className="badge" style={{
                       backgroundColor: user.role === "admin" ? "rgba(168, 85, 247, 0.15)" : "rgba(99, 102, 241, 0.15)",
                       color: user.role === "admin" ? "var(--color-purple)" : "var(--color-indigo)",
                       padding: "0.25rem 0.75rem",
@@ -328,7 +328,7 @@ function Profile() {
                   </div>
                   <div>
                     <div style={{ fontSize: "0.75rem", textTransform: "uppercase", tracking: "0.05em", color: "var(--color-text-muted)", marginBottom: "0.25rem" }}>Subscription</div>
-                    <span className="badge" style={{ 
+                    <span className="badge" style={{
                       backgroundColor: user.subscription === "premium" ? "rgba(16, 185, 129, 0.15)" : "rgba(14, 165, 233, 0.15)",
                       color: user.subscription === "premium" ? "var(--color-emerald)" : "var(--color-cyan)",
                       padding: "0.25rem 0.75rem",
@@ -362,25 +362,25 @@ function Profile() {
               {/* Account Details form */}
               <div className="glass-card" style={{ padding: "2rem" }}>
                 <h3 style={{ fontSize: "1.125rem", fontWeight: 600, color: "var(--color-text-primary)", marginBottom: "1.5rem" }}>Account Details</h3>
-                
+
                 <form onSubmit={handleUpdateProfile}>
                   <div className="form-group" style={{ marginBottom: "1.25rem" }}>
                     <label>Full Name</label>
-                    <input 
-                      type="text" 
-                      value={name} 
-                      onChange={(e) => setName(e.target.value)} 
-                      required 
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
                     />
                   </div>
-                  
+
                   <div className="form-group" style={{ marginBottom: "1.5rem" }}>
                     <label>Email Address</label>
-                    <input 
-                      type="email" 
-                      value={email} 
-                      onChange={(e) => setEmail(e.target.value)} 
-                      required 
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
                     />
                     <small style={{ color: "var(--color-text-muted)", fontSize: "0.75rem", marginTop: "0.25rem", display: "block" }}>
                       * Note: Changing your email will log you out until email verification is completed.
@@ -396,38 +396,38 @@ function Profile() {
               {/* Password update form */}
               <div className="glass-card" style={{ padding: "2rem" }}>
                 <h3 style={{ fontSize: "1.125rem", fontWeight: 600, color: "var(--color-text-primary)", marginBottom: "1.5rem" }}>Security & Password</h3>
-                
+
                 <form onSubmit={handleChangePassword}>
                   <div className="form-group" style={{ marginBottom: "1.25rem" }}>
                     <label>Current Password</label>
-                    <input 
-                      type="password" 
-                      value={currentPassword} 
-                      onChange={(e) => setCurrentPassword(e.target.value)} 
+                    <input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="••••••••"
-                      required 
+                      required
                     />
                   </div>
 
                   <div className="form-group" style={{ marginBottom: "1.25rem" }}>
                     <label>New Password</label>
-                    <input 
-                      type="password" 
-                      value={newPassword} 
-                      onChange={(e) => setNewPassword(e.target.value)} 
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Min 6 characters"
-                      required 
+                      required
                     />
                   </div>
 
                   <div className="form-group" style={{ marginBottom: "1.5rem" }}>
                     <label>Confirm New Password</label>
-                    <input 
-                      type="password" 
-                      value={confirmPassword} 
-                      onChange={(e) => setConfirmPassword(e.target.value)} 
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="••••••••"
-                      required 
+                      required
                     />
                   </div>
 

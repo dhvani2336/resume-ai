@@ -113,7 +113,17 @@ function InterviewPrep() {
         })
       });
 
-      const data = await response.json();
+      if (response.status === 503) {
+        throw new Error("AI service is temporarily busy. Please try again in a few moments.");
+      }
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        throw new Error("Failed to generate interview questions due to an unexpected server response.");
+      }
+
       if (!response.ok) {
         throw new Error(data.error || "Failed to generate interview questions.");
       }
@@ -139,7 +149,12 @@ function InterviewPrep() {
       setDisplayMode("interview");
     } catch (err) {
       console.error("Generate questions error:", err);
-      setFormError(err.message);
+      const is503 = err.message?.includes("503") || err.message?.toLowerCase().includes("service unavailable") || err.message?.toLowerCase().includes("busy");
+      if (is503) {
+        setFormError("AI service is temporarily busy. Please try again in a few moments.");
+      } else {
+        setFormError(err.message);
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -384,8 +399,27 @@ function InterviewPrep() {
               </div>
 
               {formError && (
-                <div style={{ backgroundColor: "rgba(244, 63, 94, 0.1)", border: "1px solid rgba(244, 63, 94, 0.25)", color: "var(--color-rose)", padding: "0.75rem", borderRadius: "6px", fontSize: "0.8125rem", marginBottom: "1.25rem", fontWeight: 600 }}>
-                  {formError}
+                <div style={{ backgroundColor: "rgba(244, 63, 94, 0.1)", border: "1px solid rgba(244, 63, 94, 0.25)", color: "var(--color-rose)", padding: "0.75rem", borderRadius: "6px", fontSize: "0.8125rem", marginBottom: "1.25rem", fontWeight: 600, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span>{formError}</span>
+                  {formError.includes("temporarily busy") && (
+                    <button
+                      type="button"
+                      onClick={(e) => handleStartSetup(e)}
+                      className="btn btn-sm"
+                      style={{
+                        padding: "0.25rem 0.75rem",
+                        fontSize: "0.75rem",
+                        backgroundColor: "var(--color-rose)",
+                        color: "#ffffff",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        marginLeft: "1rem"
+                      }}
+                    >
+                      Retry
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -402,7 +436,7 @@ function InterviewPrep() {
                     <select 
                       value={selectedResumeId} 
                       onChange={(e) => setSelectedResumeId(e.target.value)}
-                      style={{ width: "100%", padding: "0.75rem 1rem", borderRadius: "0.5rem", border: "1px solid var(--color-border)", backgroundColor: "rgba(30, 41, 59, 0.4)", color: "var(--color-text-primary)", fontSize: "0.875rem" }}
+                      style={{ width: "100%", padding: "0.75rem 1rem", borderRadius: "0.5rem", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", fontSize: "0.875rem" }}
                     >
                       {resumes.map(r => (
                         <option key={r.id} value={r.id} style={{ backgroundColor: "#0f172a" }}>
@@ -421,7 +455,7 @@ function InterviewPrep() {
                     value={targetRole} 
                     onChange={(e) => setTargetRole(e.target.value)}
                     placeholder="e.g. Senior Frontend Developer"
-                    style={{ width: "100%", padding: "0.75rem 1rem", borderRadius: "0.5rem", border: "1px solid var(--color-border)", backgroundColor: "rgba(30, 41, 59, 0.4)", color: "var(--color-text-primary)", fontSize: "0.875rem" }}
+                    style={{ width: "100%", padding: "0.75rem 1rem", borderRadius: "0.5rem", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", fontSize: "0.875rem" }}
                     required
                   />
                 </div>
@@ -440,7 +474,7 @@ function InterviewPrep() {
                           padding: "0.5rem",
                           fontSize: "0.75rem",
                           fontWeight: 700,
-                          backgroundColor: experienceLevel === lvl ? "var(--color-purple)" : "rgba(30, 41, 59, 0.3)",
+                          backgroundColor: experienceLevel === lvl ? "var(--color-purple)" : "var(--color-bg-inset)",
                           borderColor: experienceLevel === lvl ? "var(--color-purple)" : "var(--color-border)",
                           color: "var(--color-text-primary)"
                         }}
@@ -513,13 +547,13 @@ function InterviewPrep() {
                     onChange={(e) => setCurrentAnswer(e.target.value)}
                     disabled={isEvaluating || isSaving}
                     placeholder="Provide your professional response here. Try to answer in detail, using industry keywords, standard structures (like STAR method), and examples from your resume..."
-                    style={{ width: "100%", padding: "0.75rem 1rem", borderRadius: "0.5rem", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", fontSize: "0.875rem", resize: "vertical", marginTop: "0.25rem", fontFamily: "inherit" }}
+                    style={{ width: "100%", padding: "0.75rem 1rem", borderRadius: "0.5rem", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", fontSize: "0.875rem", resize: "vertical", marginTop: "0.25rem", fontFamily: "inherit" }}
                   />
                   {isEvaluating && (
                     <div style={{
                       position: "absolute",
                       inset: 0,
-                      backgroundColor: "rgba(15, 23, 42, 0.75)",
+                      backgroundColor: "var(--color-bg-overlay)",
                       backdropFilter: "blur(4px)",
                       borderRadius: "0.5rem",
                       display: "flex",
@@ -691,7 +725,7 @@ function InterviewPrep() {
                       {/* User's Answer */}
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                         <span style={{ fontSize: "0.6875rem", color: "var(--color-text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Your Response</span>
-                        <div style={{ padding: "0.75rem", borderRadius: "4px", backgroundColor: "rgba(15, 23, 42, 0.3)", border: "1px solid var(--color-border)", fontSize: "0.75rem", color: "var(--color-text-secondary)", lineHeight: 1.4 }}>
+                        <div style={{ padding: "0.75rem", borderRadius: "4px", backgroundColor: "var(--color-bg-inset)", border: "1px solid var(--color-border)", fontSize: "0.75rem", color: "var(--color-text-secondary)", lineHeight: 1.4 }}>
                           {userAns}
                         </div>
                       </div>

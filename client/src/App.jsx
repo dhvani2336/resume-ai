@@ -9,6 +9,7 @@ import "./App.css";
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const ResumeScanner = lazy(() => import("./pages/ResumeScanner"));
 const JobMatch = lazy(() => import("./pages/JobMatch"));
 const ResumeRewriter = lazy(() => import("./pages/ResumeRewriter"));
 const ExportResume = lazy(() => import("./pages/ExportResume"));
@@ -42,6 +43,7 @@ const PageLoader = () => (
   </div>
 );
 
+// Layout Wrapper to inject Navbar and Footer based on Route
 function MainLayout({ children, onLogout }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -88,6 +90,7 @@ function MainLayout({ children, onLogout }) {
         description = "Create a free ResumeAI account to scan resumes, track ATS scores, and practice mock interviews.";
         break;
       case "/dashboard":
+      case "/scanner":
         title = "Dashboard | ResumeAI";
         description = "Manage your uploaded resumes, view history logs, and access advanced ATS analysis insights.";
         break;
@@ -116,7 +119,7 @@ function MainLayout({ children, onLogout }) {
     }
 
     document.title = title;
-    
+
     // Update or create meta description tag
     let metaDescription = document.querySelector('meta[name="description"]');
     if (!metaDescription) {
@@ -129,6 +132,7 @@ function MainLayout({ children, onLogout }) {
 
   const dashboardRoutes = [
     "/dashboard",
+    "/scanner",
     "/job-match",
     "/rewrite",
     "/export",
@@ -309,7 +313,7 @@ function LandingPage() {
       setIsAnalyzing(false);
       return;
     }
-    
+
     // Set headers with token
     const headers = {
       "Content-Type": "application/json",
@@ -395,9 +399,9 @@ function LandingPage() {
                     {analysisResult ? fileName : "resume_senior_dev.pdf"}
                   </h3>
                 </div>
-                <span 
-                  className="status-badge" 
-                  style={{ 
+                <span
+                  className="status-badge"
+                  style={{
                     backgroundColor: analysisResult ? (analysisResult.atsScore >= 70 ? "rgba(16, 185, 129, 0.1)" : "rgba(244, 63, 94, 0.1)") : "rgba(16, 185, 129, 0.1)",
                     borderColor: analysisResult ? (analysisResult.atsScore >= 70 ? "rgba(16, 185, 129, 0.2)" : "rgba(244, 63, 94, 0.2)") : "rgba(16, 185, 129, 0.2)",
                     color: analysisResult ? (analysisResult.atsScore >= 70 ? "var(--color-emerald)" : "var(--color-rose)") : "var(--color-emerald)"
@@ -430,7 +434,7 @@ function LandingPage() {
                 <div className="card-score-info">
                   <div className="score-title">ATS Match Score</div>
                   <p className="score-desc">
-                    {analysisResult 
+                    {analysisResult
                       ? `This file aligns with ${analysisResult.atsScore}% of target skills and keyword criteria.`
                       : "This file aligns with 85% of target skills and keyword criteria."
                     }
@@ -573,9 +577,9 @@ function LandingPage() {
                     <p className="upload-desc">
                       <b>{fileName}</b> {resumeFile && `(${(resumeFile.size / 1024 / 1024).toFixed(2)} MB)`} is ready for analysis.
                     </p>
-                    <button 
-                      className="btn btn-primary" 
-                      onClick={handleAnalyze} 
+                    <button
+                      className="btn btn-primary"
+                      onClick={handleAnalyze}
                       disabled={isAnalyzing}
                       style={{ marginTop: "0.5rem", gap: "0.5rem" }}
                     >
@@ -606,7 +610,7 @@ function LandingPage() {
             </div>
 
             <div className="analysis-grid">
-              
+
               {/* Strengths Card */}
               <div className="feature-card" style={{ borderLeft: "4px solid var(--color-emerald)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
@@ -981,12 +985,13 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/scanner" element={<ResumeScanner />} />
             <Route path="/job-match" element={<JobMatch />} />
             <Route path="/rewrite" element={<ResumeRewriter />} />
             <Route path="/export" element={<ExportResume />} />
             <Route path="/analytics" element={<AnalyticsDashboard />} />
             <Route path="/interview-prep" element={<InterviewPrep />} />
-            
+
             {/* Enterprise Routes */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Profile />} />
@@ -1002,7 +1007,7 @@ function App() {
             <Route path="/public/reports/:token" element={<PublicReportView type="resume" />} />
             <Route path="/public/job-match/:token" element={<PublicReportView type="job-match" />} />
             <Route path="/admin" element={<AdminPanel />} />
-            
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

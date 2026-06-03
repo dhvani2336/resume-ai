@@ -1,22 +1,104 @@
 /* Base Variables and Resets for ResumeAI */
 :root {
-  --color-bg: #030712; /* Deep Slate-950 */
+  --color-bg: #030712;
   --color-card-bg: rgba(17, 24, 39, 0.6);
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-hover: rgba(255, 255, 255, 0.16);
-  
+
   --color-text-primary: #f8fafc;
   --color-text-secondary: #94a3b8;
   --color-text-muted: #64748b;
-  
+
   --color-cyan: #0ea5e9;
   --color-indigo: #6366f1;
   --color-purple: #a855f7;
   --color-emerald: #10b981;
   --color-rose: #f43f5e;
-  
+
   --max-width: 1200px;
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  /* Component specific tokens (Dark mode defaults) */
+  --color-input-bg: rgba(15, 23, 42, 0.4);
+  --color-sidebar-bg: rgba(9, 13, 26, 0.7);
+  --color-topbar-bg: rgba(3, 7, 18, 0.5);
+  --color-glass-blur: blur(24px);
+  --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+
+  /* Sidebar active / hover tokens (Dark Mode defaults) */
+  --sidebar-active-bg: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(99, 102, 241, 0.06));
+  --sidebar-active-border: 1px solid rgba(14, 165, 233, 0.25);
+  --sidebar-active-text: #ffffff;
+  --sidebar-active-icon-color: var(--color-cyan);
+  --sidebar-active-shadow: 0 4px 12px rgba(14, 165, 233, 0.05);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.03);
+  --sidebar-hover-border: rgba(255, 255, 255, 0.02);
+  --sidebar-hover-text: var(--color-text-primary);
+
+  /* Welcome banner gradient */
+  --welcome-gradient: linear-gradient(135deg, #ffffff, var(--color-text-secondary));
+
+  /* Card shadow properties */
+  --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.35), 0 0 15px rgba(14, 165, 233, 0.05);
+
+  /* Card hover properties */
+  --color-card-hover-bg: rgba(30, 41, 59, 0.45);
+  --color-card-hover-border: rgba(14, 165, 233, 0.25);
+
+  /* Custom input variables */
+  --color-input-border: var(--color-border);
+  --color-bg-inset: rgba(15, 23, 42, 0.3);
+  --color-bg-overlay: rgba(15, 23, 42, 0.75);
+}
+
+[data-theme="light"] {
+  --color-bg: #F5F7FB;
+  --color-card-bg: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-border-hover: #D1D5DB;
+
+  --color-text-primary: #111827;
+  --color-text-secondary: #4B5563; /* updated contrast */
+  --color-text-muted: #6B7280; /* updated contrast */
+
+  --color-cyan: #0284c7;
+  --color-indigo: #4f46e5;
+  --color-purple: #7e22ce;
+  --color-emerald: #10b981;
+  --color-rose: #ef4444;
+
+  --color-input-bg: #FFFFFF;
+  --color-sidebar-bg: #FFFFFF;
+  --color-topbar-bg: #FFFFFF;
+  --color-glass-blur: none;
+  --shadow-premium: 0 4px 20px rgba(0, 0, 0, 0.06);
+
+  /* Sidebar active / hover tokens (Light Mode) */
+  --sidebar-active-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(6, 182, 212, 0.12));
+  --sidebar-active-border: 1px solid rgba(59, 130, 246, 0.25);
+  --sidebar-active-text: var(--color-cyan);
+  --sidebar-active-icon-color: var(--color-cyan);
+  --sidebar-active-shadow: 0 4px 12px rgba(59, 130, 246, 0.05);
+  --sidebar-hover-bg: rgba(59, 130, 246, 0.04);
+  --sidebar-hover-border: rgba(59, 130, 246, 0.08);
+  --sidebar-hover-text: var(--color-cyan);
+
+  /* Welcome banner gradient */
+  --welcome-gradient: linear-gradient(135deg, var(--color-text-primary), var(--color-text-secondary));
+
+  /* Card shadow properties */
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  /* Card hover properties */
+  --color-card-hover-bg: #FFFFFF;
+  --color-card-hover-border: var(--color-border-hover);
+
+  /* Custom input variables */
+  --color-input-border: #D1D5DB;
+  --color-bg-inset: #F8FAFC;
+  --color-bg-overlay: rgba(255, 255, 255, 0.75);
 }
 
 * {
@@ -25,7 +107,8 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   background-color: var(--color-bg);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -42,8 +125,48 @@ a {
   text-decoration: none;
 }
 
-button, input, textarea {
+button,
+input,
+textarea {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
+}
+
+/* Smooth theme transition */
+body, 
+.dashboard-layout-container, 
+.dashboard-layout-main, 
+.dashboard-layout-topbar,
+.sidebar-container, 
+.glass-card, 
+.feature-card, 
+.db-history-item,
+.template-select-card,
+input, 
+select, 
+textarea,
+span,
+h1,
+h2,
+h3,
+h4,
+p,
+a {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-cyan) !important;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25) !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: #6B7280;
+}
+
+[data-theme="light"] .sidebar-nav-menu::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
 }

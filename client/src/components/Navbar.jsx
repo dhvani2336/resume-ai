@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { API_BASE } from "../utils/api.js";
+import Logo from "./Logo.jsx";
 
 function Navbar({ user, onLogout }) {
   const [notifications, setNotifications] = useState([]);
@@ -73,9 +74,8 @@ function Navbar({ user, onLogout }) {
         
         {/* Logo */}
         <div className="navbar-logo-section">
-          <Link to="/" className="navbar-logo">
-            <div className="logo-dot"></div>
-            <span>ResumeAI</span>
+          <Link to="/" className="navbar-logo" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+            <Logo size="normal" />
           </Link>
         </div>
 

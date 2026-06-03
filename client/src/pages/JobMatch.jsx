@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE } from "../utils/api.js";
+import CircularScore from "../components/CircularScore.jsx";
 
 function JobMatch() {
   const [resumes, setResumes] = useState([]);
   const [selectedResumeId, setSelectedResumeId] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [matchHistory, setMatchHistory] = useState([]);
-  
+
   // Loading & State variables
   const [loading, setLoading] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
-  
+
   // Drag & drop for new resume
   const [dragActive, setDragActive] = useState(false);
   const [uploadError, setUploadError] = useState("");
@@ -339,12 +340,12 @@ function JobMatch() {
       </header>
 
       <div className="dashboard-grid container">
-        
+
         {/* Left Column: Match history sidebar */}
         <div className="dashboard-left">
           <div className="glass-card db-card" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             <h3 className="card-section-title">Match History</h3>
-            
+
             {matchHistory.length === 0 ? (
               <div className="empty-history-box" style={{ flexGrow: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <p style={{ textAlign: "center", fontSize: "0.8125rem", color: "var(--color-text-muted)" }}>
@@ -356,8 +357,8 @@ function JobMatch() {
                 {matchHistory.map((item) => {
                   const theme = getScoreTheme(item.matchScore);
                   return (
-                    <div 
-                      key={item.id} 
+                    <div
+                      key={item.id}
                       onClick={() => loadPastMatch(item.id)}
                       className={`db-history-item ${activeMatch?.id === item.id ? "active" : ""}`}
                       style={{ padding: "0.75rem 0.875rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}
@@ -370,10 +371,10 @@ function JobMatch() {
                           {new Date(item.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      
-                      <div 
+
+                      <div
                         className="db-hist-score"
-                        style={{ 
+                        style={{
                           fontSize: "0.6875rem",
                           padding: "0.1875rem 0.375rem",
                           color: theme.color,
@@ -390,7 +391,7 @@ function JobMatch() {
               </div>
             )}
 
-            <button 
+            <button
               onClick={() => {
                 setActiveMatch(null);
                 setJobDescription("");
@@ -405,7 +406,7 @@ function JobMatch() {
 
         {/* Right Column: Work area / results */}
         <div className="dashboard-right">
-          
+
           {isAnalyzing ? (
             <div className="glass-card" style={{ padding: "3rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "25rem" }}>
               <div className="spinner" style={{ width: "3rem", height: "3rem", borderWidth: "3px", borderColor: "var(--color-purple) transparent" }}></div>
@@ -417,18 +418,18 @@ function JobMatch() {
           ) : activeMatch ? (
             /* Results Screen */
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-              
+
               <div className="glass-card" style={{ padding: "2rem" }}>
-                
+
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" }}>
                   <div>
                     <div className="card-title-sub">Job Match Scorecard</div>
                     <h3 className="card-title-main" style={{ fontSize: "1.125rem", wordBreak: "break-all" }}>{activeMatch.originalname}</h3>
                   </div>
-                  
-                  <span 
+
+                  <span
                     className="status-badge"
-                    style={{ 
+                    style={{
                       backgroundColor: "rgba(255, 255, 255, 0.03)",
                       borderColor: getScoreTheme(activeMatch.matchScore).color,
                       color: getScoreTheme(activeMatch.matchScore).color,
@@ -443,27 +444,17 @@ function JobMatch() {
                 </div>
 
                 <div className="card-score-row" style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
-                  <div className="progress-container" style={{ width: "6.5rem", height: "6.5rem" }}>
-                    <svg className="progress-svg">
-                      <circle className="progress-circle-bg" r="34" cx="42" cy="42" style={{ stroke: "rgba(255, 255, 255, 0.05)" }} />
-                      <circle
-                        className="progress-circle-fill"
-                        r="34"
-                        cx="42"
-                        cy="42"
-                        style={{
-                          stroke: getScoreTheme(activeMatch.matchScore).color,
-                          strokeDashoffset: 214 - (214 * activeMatch.matchScore) / 100
-                        }}
-                      />
-                    </svg>
-                    <div className="progress-text" style={{ fontSize: "1.25rem", color: "var(--color-text-primary)" }}>{activeMatch.matchScore}%</div>
-                  </div>
+                  <CircularScore 
+                    score={activeMatch.matchScore} 
+                    size="6.5rem" 
+                    fontSize="1.25rem" 
+                    glow={true} 
+                  />
 
                   <div className="card-score-info" style={{ flexGrow: 1 }}>
                     <h4 style={{ fontSize: "0.9375rem", color: "var(--color-text-primary)", fontWeight: 700, margin: "0 0 0.25rem 0" }}>Role Relevance Level</h4>
                     <p className="score-desc" style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", lineHeight: "1.5", margin: 0 }}>
-                      This profile has a match score of <b>{activeMatch.matchScore}%</b> based on skills matching, structural formatting overlaps, and background experiences requested in the JD.
+                      This profile has a match score of <b style={{ color: getScoreTheme(activeMatch.matchScore).color }}>{activeMatch.matchScore}%</b> based on skills matching, structural formatting overlaps, and background experiences requested in the JD.
                     </p>
                   </div>
                 </div>
@@ -472,7 +463,7 @@ function JobMatch() {
 
               {/* Match Feedback Details */}
               <div className="dashboard-details-grid">
-                
+
                 {/* Matching Skills */}
                 <div className="feature-card" style={{ borderLeft: "4px solid var(--color-emerald)" }}>
                   <h4 style={{ fontSize: "0.9375rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--color-emerald)" }}>✓ Matching Competencies</h4>
@@ -549,7 +540,7 @@ function JobMatch() {
               )}
 
               <form onSubmit={handleAnalyzeMatch} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-                
+
                 {/* Resume Selector */}
                 <div>
                   <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 700, color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>
@@ -563,7 +554,7 @@ function JobMatch() {
                     <select
                       value={selectedResumeId}
                       onChange={(e) => setSelectedResumeId(e.target.value)}
-                      style={{ width: "100%", padding: "0.625rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", outline: "none", cursor: "pointer", marginBottom: "0.75rem" }}
+                      style={{ width: "100%", padding: "0.625rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", outline: "none", cursor: "pointer", marginBottom: "0.75rem" }}
                     >
                       {resumes.map((r) => (
                         <option key={r.id} value={r.id}>
@@ -590,7 +581,7 @@ function JobMatch() {
                       accept=".pdf"
                       onChange={handleFileSelect}
                     />
-                    
+
                     {isUploading ? (
                       <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", justifyContent: "center" }}>
                         <div className="spinner" style={{ width: "1rem", height: "1rem" }}></div>
@@ -624,7 +615,7 @@ function JobMatch() {
                     placeholder="Paste the full job description text here (skills, qualifications, expectations)..."
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
-                    style={{ width: "100%", padding: "0.75rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-border)", backgroundColor: "rgba(15, 23, 42, 0.5)", color: "var(--color-text-primary)", outline: "none", resize: "vertical", fontFamily: "inherit" }}
+                    style={{ width: "100%", padding: "0.75rem", fontSize: "0.8125rem", borderRadius: "6px", border: "1px solid var(--color-input-border, var(--color-border))", backgroundColor: "var(--color-input-bg)", color: "var(--color-text-primary)", outline: "none", resize: "vertical", fontFamily: "inherit" }}
                   />
                   <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.25rem", fontSize: "0.6875rem", color: "var(--color-text-muted)" }}>
                     <span>Minimum 20 characters required.</span>

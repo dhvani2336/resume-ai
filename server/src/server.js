@@ -65,14 +65,29 @@ app.use(cors({
 // Rate limiting on /api endpoints
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
+  max: 1000, // Increased to 1000 to accommodate notification polling and multi-tab use
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.originalUrl.startsWith('/api/auth'), // Skip auth routes to avoid lockout during rapid testing
   message: {
     success: false,
     error: 'Too many requests from this IP. Please try again after 15 minutes.'
   }
 });
+
+// Relaxed rate limiter specifically for authentication routes (login/register) to allow testing
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300, // Safe limit that allows local testing without false positives
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many login attempts. Please try again after 15 minutes.'
+  }
+});
+
+app.use('/api/auth', authLimiter);
 app.use('/api', apiLimiter);
 
 // Body parsers

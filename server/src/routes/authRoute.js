@@ -9,7 +9,8 @@ import {
   resetPassword,
   verifyEmail,
   resendVerification,
-  uploadAvatar
+  uploadAvatar,
+  deleteAccount
 } from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { uploadAvatarMiddleware } from '../middleware/multer.js';
@@ -26,5 +27,6 @@ router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
 router.post('/verify-email', verifyEmail);
 router.post('/resend-verification', protect, resendVerification);
+router.delete('/delete-account', protect, deleteAccount);
 
 export default router;

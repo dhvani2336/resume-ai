@@ -68,7 +68,7 @@ function AnalyticsDashboard() {
 
         <div className="container" style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "2rem" }}>
           {/* Metrics skeleton */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem" }}>
+          <div className="analytics-metrics-grid">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="glass-card" style={{ padding: "1.25rem", height: "6rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div className="skeleton skeleton-text" style={{ width: "60%" }}></div>
@@ -201,7 +201,7 @@ function AnalyticsDashboard() {
               cx={p.x}
               cy={p.y}
               r="4.5"
-              fill="rgba(15, 23, 42, 1)"
+              fill="var(--color-card-bg)"
               stroke={color}
               strokeWidth="2.5"
               style={{ cursor: "pointer", transition: "all 0.15s ease" }}
@@ -529,7 +529,7 @@ function AnalyticsDashboard() {
       <div className="container" style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "2rem", paddingBottom: "4rem" }}>
         
         {/* Row 1: Metrics Cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem" }}>
+        <div className="analytics-metrics-grid">
           
           {/* Card 1: Resumes */}
           <div className="glass-card" style={{ padding: "1.25rem", borderLeft: "4px solid var(--color-emerald)", display: "flex", flexDirection: "column", gap: "0.25rem", textAlign: "left" }}>
@@ -678,7 +678,7 @@ function AnalyticsDashboard() {
                       width: "11px",
                       height: "11px",
                       borderRadius: "50%",
-                      backgroundColor: "rgba(15, 23, 42, 1)",
+                      backgroundColor: "var(--color-card-bg)",
                       border: `3.5px solid ${dotColor}`,
                       boxShadow: `0 0 6px ${dotColor}`
                     }}></div>

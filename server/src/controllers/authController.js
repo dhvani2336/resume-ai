@@ -1,9 +1,12 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
 import { User } from '../models/userModel.js';
 import { Analysis } from '../models/analysisModel.js';
 import { sendMail } from '../utils/mailer.js';
+import { getDb } from '../config/db.js';
 
 // Helper to sign JWT tokens
 const generateToken = (id) => {
@@ -137,18 +140,20 @@ export const getUserProfile = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, notificationPreferences, accountPreferences } = req.body;
     const userId = req.user.id;
 
-    if (!name && !email) {
+    if (!name && !email && !notificationPreferences && !accountPreferences) {
       return res.status(400).json({
         success: false,
-        error: 'Please provide name or email to update.'
+        error: 'Please provide name, email, or settings to update.'
       });
     }
 
     const updates = {};
     if (name) updates.name = name;
+    if (notificationPreferences) updates.notificationPreferences = notificationPreferences;
+    if (accountPreferences) updates.accountPreferences = accountPreferences;
     
     if (email && email.toLowerCase() !== req.user.email.toLowerCase()) {
       const emailExists = await User.findByEmail(email);
@@ -406,6 +411,81 @@ export const uploadAvatar = async (req, res, next) => {
       success: true,
       message: 'Profile photo updated successfully.',
       user: updatedUser
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const db = getDb();
+
+    // First find user analyses to delete physical resume files
+    let userAnalyses = [];
+    if (db) {
+      userAnalyses = await db.collection('analyses').find({ userId }).toArray();
+    } else {
+      const filePath = path.join(process.cwd(), 'data', 'analyses.json');
+      if (fs.existsSync(filePath)) {
+        try {
+          const data = JSON.parse(fs.readFileSync(filePath, 'utf8') || '[]');
+          userAnalyses = data.filter(item => item.userId === userId);
+        } catch (e) {
+          console.error('Error reading analyses JSON database:', e);
+        }
+      }
+    }
+
+    // Physically delete files on disk
+    userAnalyses.forEach(analysis => {
+      if (analysis.filename) {
+        const filePath = path.join(process.cwd(), 'uploads', 'resumes', analysis.filename);
+        if (fs.existsSync(filePath)) {
+          try {
+            fs.unlinkSync(filePath);
+            console.log(`[Delete Account] Successfully deleted physical file: ${filePath}`);
+          } catch (fileError) {
+            console.error(`[Delete Account] Failed to delete physical file: ${filePath}`, fileError);
+          }
+        }
+      }
+    });
+
+    // Delete database records
+    if (db) {
+      await db.collection('users').deleteOne({ _id: userId });
+      await db.collection('analyses').deleteMany({ userId });
+      await db.collection('job_matches').deleteMany({ userId });
+      await db.collection('notifications').deleteMany({ userId });
+      await db.collection('workspaces').deleteMany({ ownerId: userId });
+    } else {
+      // JSON storage fallback
+      const deleteFromJsonFile = (filename, key = 'userId') => {
+        const filePath = path.join(process.cwd(), 'data', filename);
+        if (fs.existsSync(filePath)) {
+          try {
+            const data = JSON.parse(fs.readFileSync(filePath, 'utf8') || '[]');
+            const filtered = data.filter(item => item[key] !== userId && item.id !== userId);
+            fs.writeFileSync(filePath, JSON.stringify(filtered, null, 2));
+          } catch (e) {
+            console.error(`Error deleting from ${filename}:`, e);
+          }
+        }
+      };
+      
+      deleteFromJsonFile('users.json', 'id');
+      deleteFromJsonFile('analyses.json', 'userId');
+      deleteFromJsonFile('jobmatches.json', 'userId');
+      deleteFromJsonFile('notifications.json', 'userId');
+    }
+
+    console.log(`[Delete Account] Successfully deleted user account & data for user: ${userId}`);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Your account and all associated scan data have been permanently deleted.'
     });
   } catch (error) {
     next(error);

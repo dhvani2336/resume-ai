@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { API_BASE } from "../utils/api.js";
+import Logo from "../components/Logo.jsx";
 
 function PublicReportView({ type }) {
   const { token } = useParams();
@@ -89,11 +90,10 @@ function PublicReportView({ type }) {
   return (
     <div className="dashboard-wrapper animate-fade-in" style={{ paddingBottom: "5rem" }}>
       {/* Navbar Brand Header (Static / Non-Dashboard style) */}
-      <header className="dashboard-header" style={{ borderBottom: "1px solid var(--color-border)", marginBottom: "3rem" }}>
-        <div className="db-brand">
-          <div className="db-logo-dot" style={{ backgroundColor: isResume ? "var(--color-cyan)" : "var(--color-purple)" }}></div>
-          <span>ResumeAI Scorecard</span>
-        </div>
+      <header className="dashboard-header" style={{ borderBottom: "1px solid var(--color-border)", marginBottom: "3rem", display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "1rem" }}>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <Logo size="normal" />
+        </Link>
         <div>
           <Link to="/" className="btn btn-sm btn-secondary">
             Analyze Your Own Resume
