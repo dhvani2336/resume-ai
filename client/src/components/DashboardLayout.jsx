@@ -138,7 +138,14 @@ function DashboardLayout({ children, user, onLogout }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <h2 className="topbar-page-title">{getPageTitle()}</h2>
+            <h2 className="topbar-page-title">
+              {getPageTitle() === "Dashboard Overview" ? (
+                <>
+                  <span className="desktop-title">Dashboard Overview</span>
+                  <span className="mobile-title">Dashboard</span>
+                </>
+              ) : getPageTitle()}
+            </h2>
           </div>
 
           <div className="topbar-right">
@@ -267,7 +274,7 @@ function DashboardLayout({ children, user, onLogout }) {
                 }}>
                   {user.name ? user.name.charAt(0).toUpperCase() : "U"}
                 </div>
-                <span className="nav-link" style={{ display: "inline-block", maxWidth: "6rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <span className="nav-link topbar-username" style={{ display: "inline-block", maxWidth: "6rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {user.name}
                 </span>
               </Link>

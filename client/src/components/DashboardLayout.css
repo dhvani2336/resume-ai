@@ -381,7 +381,7 @@
   margin-top: 0 !important;
 }
 
-/* --- RESPONSIVE MOBILE SIDEBAR --- */
+/* --- RESPONSIVE MOBILE SIDEBAR & DRAWER OVERRIDES --- */
 @media (max-width: 1023px) {
   .hamburger-btn {
     display: flex;
@@ -391,6 +391,17 @@
     position: fixed;
     transform: translateX(-100%);
     box-shadow: none;
+    width: 78vw !important;     /* Drawer width: 75-80% of screen */
+    min-width: 78vw !important; /* Drawer width: 75-80% of screen */
+    height: 100dvh !important;  /* Use dynamic viewport height to prevent address bar issue */
+    max-height: 100dvh !important;
+    overflow: hidden;           /* Prevent content overflow, scroll inner nav instead */
+    will-change: transform;
+    z-index: 1000;
+  }
+
+  .sidebar-brand, .sidebar-footer {
+    flex-shrink: 0;             /* Prevent squishing on short viewport heights */
   }
 
   .sidebar-container.open {
@@ -408,5 +419,116 @@
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     z-index: 999;
+  }
+
+  /* Make columns drop to a single column on tablet/mobile views */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* --- GENERAL MOBILE STYLING (UNDER 768px) --- */
+@media (max-width: 767px) {
+  /* Header Optimization */
+  .dashboard-layout-topbar {
+    height: 3.5rem !important;
+    min-height: 3.5rem !important;
+    padding: 0 1rem !important;
+  }
+
+  .topbar-left {
+    gap: 0.75rem !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+
+  .topbar-page-title {
+    font-size: 1rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-width: 0 !important;
+  }
+
+  /* Hide username but keep notification icon and avatar on right */
+  .topbar-username {
+    display: none !important;
+  }
+
+  /* Toggle Title between Desktop and Mobile text versions */
+  .desktop-title {
+    display: none !important;
+  }
+  
+  .mobile-title {
+    display: inline !important;
+  }
+
+  /* Spacing: Reduce vertical gap below header */
+  .dashboard-layout-content {
+    padding: 1rem !important;
+    gap: 1rem !important;
+  }
+
+  /* Spacing: Reduce vertical margin below header for all pages */
+  .dashboard-layout-main .container,
+  .dashboard-layout-main .dashboard-grid {
+    margin-top: 0.75rem !important;
+  }
+
+  /* Spacing: Reduce card padding by 15-20% */
+  .glass-card {
+    padding: 1.2rem !important; /* ~20% reduction */
+    max-width: 100% !important; /* cards occupy full width */
+  }
+
+  .stat-card.glass-card {
+    padding: 1.1rem 1.2rem !important; /* ~20% reduction */
+  }
+
+  /* Quick action buttons full-width */
+  .quick-actions-grid button {
+    width: 100% !important;
+  }
+
+  /* Prevent page horizontal scroll & maintain clean viewport container layout */
+  .dashboard-layout-container,
+  .dashboard-layout-main {
+    overflow-x: hidden !important;
+  }
+}
+
+.mobile-title {
+  display: none;
+}
+
+/* --- GRID SYSTEM DECLARATIONS --- */
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.dashboard-middle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .dashboard-middle-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .dashboard-middle-grid {
+    gap: 1rem !important;
   }
 }

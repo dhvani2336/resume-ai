@@ -193,7 +193,7 @@ function Dashboard() {
         </div>
 
         {/* Quick Statistics Cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem" }}>
+        <div className="dashboard-stats-grid">
           
           <div className="glass-card" style={{ padding: "1.5rem", borderLeft: "4px solid var(--color-emerald)", display: "flex", flexDirection: "column", gap: "0.25rem", textAlign: "left" }}>
             <span style={{ fontSize: "0.75rem", color: "var(--color-text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em" }}>Resumes Scanned</span>
@@ -216,7 +216,7 @@ function Dashboard() {
         </div>
 
         {/* Middle Row Layout */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: "1.5rem" }}>
+        <div className="dashboard-middle-grid">
           
           {/* Column A: ATS Trend & Performance Overview */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
@@ -261,7 +261,7 @@ function Dashboard() {
                 Quick Action Shortcuts
               </h3>
               
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.75rem" }}>
+              <div className="quick-actions-grid">
                 <button onClick={() => navigate("/scanner")} className="btn btn-primary" style={{ padding: "0.5rem", fontSize: "0.75rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "0.25rem", backgroundColor: "rgba(14, 165, 233, 0.05)", borderColor: "var(--color-cyan)", color: "var(--color-text-primary)" }}>
                   <span>Scanner Workspace</span>
                 </button>
